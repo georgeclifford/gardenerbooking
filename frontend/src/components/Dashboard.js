@@ -1,7 +1,8 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
+import Sidebar from "./Sidebar";
 
-const Dashboard = ({setAuth}) => {
+const Dashboard = () => {
 
     const [fname,setFName] = useState("");
     const [lname,setLName] = useState("");
@@ -16,7 +17,7 @@ const Dashboard = ({setAuth}) => {
 
             const parseRes = await response.json();
 
-            console.log(parseRes);
+            // console.log(parseRes);
 
             setFName(parseRes.c_fname);
             setLName(parseRes.c_lname);
@@ -28,22 +29,15 @@ const Dashboard = ({setAuth}) => {
         }
     }
 
-    const logout = (e) =>{
-        e.preventDefault();
-        localStorage.removeItem("token");
-        setAuth(false);
-        toast.success("Successfully Logged Out!");
-    }
-
     useEffect(() => {
         getName();
     });
 
     return (
         <Fragment>
+            <Sidebar />
             <div className="pad1">
                 <h1>Welcome {fname} {lname} </h1>
-                <button className="btn btn-outline-danger" onClick={e => logout(e)}>Logout</button>
             </div>
         </Fragment>
     )

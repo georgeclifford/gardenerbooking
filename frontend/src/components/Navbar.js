@@ -1,7 +1,47 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = (props) => {
+
+    const auth = props.isAuth;
+    const [fname,setFName] = useState("");
+    const [lname,setLName] = useState("");
+
+    async function getName() {
+        try {
+
+            const response = await fetch("http://localhost:5000/dashboard/", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes);
+
+            setFName(parseRes.c_fname);
+            setLName(parseRes.c_lname);
+            
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
+    useEffect(() => {
+        getName();
+    });
+
+    function LoginButton() {
+        // const isAuth= props.setAuth;
+        if (auth) {
+            return <Link to="/login" className="btn btn-outline-light btn-sm">{fname} {lname}</Link>
+        }
+
+        return <Link to="/login" className="btn btn-outline-light btn-sm">Login</Link>
+    }
+
     return (
         <Fragment>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -28,7 +68,7 @@ const Navbar = () => {
                             </li>
                         </ul>
                         <div class="d-flex">
-                            <Link to="/login" className="btn btn-outline-light btn-sm">Login</Link>
+                            <LoginButton />
                         </div>
                     </div>
                 </div>
