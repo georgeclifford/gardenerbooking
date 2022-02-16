@@ -1,0 +1,9 @@
+.pad1 {
+  padding-top: 140px;
+  padding-bottom: 80px;
+}
+.fixed-height {
+  max-height: 550px;
+  object-fit: cover;
+  object-position: 0% 60%;
+}
