@@ -44,13 +44,13 @@ return (
                     <div class="col-md mt-3">
                         <h5 class="font-weight-bold">Social</h5>
                         <ul class="list-unstyled">
-                            <li><a class="text-light text-decoration-none" href="#"> <Fbicon /> Facebook
+                            <li><a class="text-light text-decoration-none" href="#"> <Fbicon className="mx-1 mt-n1" /> Facebook
                                 </a></li>
-                            <li><a class="text-light text-decoration-none" href="#"> <Twticon /> Twitter
+                            <li><a class="text-light text-decoration-none" href="#"> <Twticon className="mx-1 mt-n1" /> Twitter
                                 </a></li>
-                            <li><a class="text-light text-decoration-none" href="#"> <Igicon /> Instagram 
+                            <li><a class="text-light text-decoration-none" href="#"> <Igicon className="mx-1 mt-n1" /> Instagram 
                                 </a></li>
-                            <li><a class="text-light text-decoration-none" href="#"> <Yticon /> Youtube
+                            <li><a class="text-light text-decoration-none" href="#"> <Yticon className="mx-1 mt-n1" /> Youtube
                                 </a></li>
                         </ul>
                     </div>

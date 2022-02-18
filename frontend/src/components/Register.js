@@ -60,7 +60,7 @@ const Register = ({setAuth}) => {
 
     return (
         <Fragment>
-            <div className="pad1 col-lg-7 col-md-7 col-sm-7 m-auto">
+            <div className="pad1 col-lg-7 col-md-8 col-sm-10 m-auto">
                 <h1 className="mb-5 text-center">Register</h1>
                 <form onSubmit={onSubmitForm} className="row px-5">
 

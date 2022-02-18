@@ -34,7 +34,7 @@ const Navbar = (props) => {
     });
 
     function LoginButton() {
-        // const isAuth= props.setAuth;
+
         if (isLoggedin) {
             return <Link to="/login" className="btn btn-outline-light btn-sm">{fname} {lname}</Link>
         }

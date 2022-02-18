@@ -16,6 +16,8 @@ import Cards from './components/Cards';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
+import CustomerCards from './components/CustomerCards';
+import CustomerBookings from './components/CustomerBookings';
 
 toast.configure();
 
@@ -61,6 +63,8 @@ function App() {
             <Route exact path="/login" element = { !isAuthenticated ? ( <Login setAuth = {setAuth} /> ) : ( <Navigate to="/dashboard" /> )} />
             <Route exact path="/register" element = { !isAuthenticated ? ( <Register setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
             <Route exact path="/dashboard" element = { isAuthenticated ? ( <Dashboard setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/customercards" element = { isAuthenticated ? ( <CustomerCards setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/customerbookings" element = { isAuthenticated ? ( <CustomerBookings setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
           </Routes>
         <Footer />
       </Router>

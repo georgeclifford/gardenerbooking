@@ -2,12 +2,12 @@ import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 
-const Dashboard = ({setAuth}) => {
+const CustomerCards = ({setAuth}) => {
 
     // const [c_fname,setFName] = useState("");
     // const [c_lname,setLName] = useState("");
 
-    const [isActive,setActive] = useState("dashboard");
+    const [isActive,setActive] = useState("cards");
 
     const [inputs, setInputs] = useState({
         fn: "",
@@ -61,9 +61,10 @@ const Dashboard = ({setAuth}) => {
         <Fragment>
             <div className="d-flex">
                 <Sidebar setAuth={setAuth} isActive={isActive} />
-                <div className="pad1 col-lg-7 col-md-7 col-sm-7 m-auto">
-                    <h1 className="mb-5 text-center">Profile</h1>
-                    <form className="row px-5">
+                <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
+                    <h1 className="mb-5 text-center">Cards</h1>
+                    <p className="mt-5 text-center text-muted">No Cards Yet!</p>
+                    {/* <form className="row px-5">
 
                         <div class="col-lg-6 mb-3">
                             <label for="exampleInputEmail1" class="form-label">First Name</label>
@@ -105,7 +106,7 @@ const Dashboard = ({setAuth}) => {
                             <input type="text" name="dist" value={inputs.dist} onChange={e => onChange(e)} class="form-control" id="exampleInputEmail1" placeholder="District" required />
                         </div>
 
-                        {/* <div class="col-lg-6 mb-3">
+                        <div class="col-lg-6 mb-3">
                             <label for="exampleInputPassword1" class="form-label">Password</label>
                             <input type="password" name="password" minLength="5" value={password} onChange={e => onChange(e)} className="form-control" placeholder="********" required />
                         </div>
@@ -113,7 +114,7 @@ const Dashboard = ({setAuth}) => {
                         <div class="col-lg-6 mb-3">
                             <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
                             <input type="password" name="confirmpass" value={confirmpass} onChange={e => onChange(e)} minLength="5" class="form-control" placeholder="********" required />
-                        </div> */}
+                        </div>
 
                             <div class="col-lg-12 col-md-6 col-sm-6">
                             <button class="btn btn-dark mx-1 mt-3">Update Profile</button>
@@ -121,11 +122,11 @@ const Dashboard = ({setAuth}) => {
                             <button class="btn btn-danger mx-1 mt-3">Deactivate Account</button>
                         </div>
 
-                    </form>
+                    </form> */}
                 </div>
             </div>
         </Fragment>
     )
 };
 
-export default Dashboard;
+export default CustomerCards;

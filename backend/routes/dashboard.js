@@ -12,7 +12,7 @@ router.get("/", authorization, async(req, res) => {
         
         res.json(user.rows[0]);
 
-        console.log(user.rows[0]);
+        // console.log(user.rows[0]);
 
     } catch (err) {
 

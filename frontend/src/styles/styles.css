@@ -9,9 +9,10 @@
   object-position: 0% 60%;
 }
 
-.sidewidth {
+.sidebar {
   margin-top: 72px;
   width: 280px;
+  min-height: calc(100vh - 160px);
 }
 
 .active {
@@ -20,4 +21,8 @@
 
 .sidebutton:hover {
   background-color: rgb(100, 100, 100) !important;
+}
+
+.mt-n1 {
+  margin-top: -0.2rem !important;
 }
