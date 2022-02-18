@@ -55,7 +55,7 @@ function App() {
   return (
     <Fragment>
       <Router>
-      <Navbar isAuth={isAuthenticated} />
+      <Navbar isLoggedin={isAuthenticated} />
           <Routes>
             <Route exact path="/" element = { <> <Carousel setAuth={!setAuth} /> <Cards setAuth={!setAuth} /> </> }/>
             <Route exact path="/login" element = { !isAuthenticated ? ( <Login setAuth = {setAuth} /> ) : ( <Navigate to="/dashboard" /> )} />

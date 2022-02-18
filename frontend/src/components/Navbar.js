@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
 
-    const auth = props.isAuth;
+    const isLoggedin = props.isLoggedin;
     const [fname,setFName] = useState("");
     const [lname,setLName] = useState("");
 
@@ -35,7 +35,7 @@ const Navbar = (props) => {
 
     function LoginButton() {
         // const isAuth= props.setAuth;
-        if (auth) {
+        if (isLoggedin) {
             return <Link to="/login" className="btn btn-outline-light btn-sm">{fname} {lname}</Link>
         }
 

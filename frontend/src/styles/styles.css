@@ -1,3 +1,4 @@
+
 .pad1 {
   padding-top: 140px;
   padding-bottom: 80px;
@@ -6,4 +7,17 @@
   max-height: 550px;
   object-fit: cover;
   object-position: 0% 60%;
+}
+
+.sidewidth {
+  margin-top: 72px;
+  width: 280px;
+}
+
+.active {
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.sidebutton:hover {
+  background-color: rgb(100, 100, 100) !important;
 }

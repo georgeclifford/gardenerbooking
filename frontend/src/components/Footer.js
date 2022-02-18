@@ -59,8 +59,8 @@ return (
                 </div>
 
             </div>
-
-            <div class="footer-copyright text-center py-1" id="copyright">© 2020 Copyright</div>
+            <hr />
+            <div class="footer-copyright text-center py-1 " id="copyright">© 2022 Copyright</div>
 
         </footer>
     </Fragment>
