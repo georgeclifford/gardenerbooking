@@ -7,19 +7,19 @@ import { ReactComponent as Yticon} from "bootstrap-icons/icons/youtube.svg";
 const Footer = () => {
 return (
     <Fragment>
-        <footer class="page-footer font-small p-4 bg-dark text-light">
+        <footer className="page-footer font-small p-4 bg-dark text-light">
 
-            <div class="container text-center">
-                <div class="row">
+            <div className="container text-center">
+                <div className="row">
 
-                    <div class="col-md mt-3">
-                        <h5 class="font-weight-bold">Urban Gardener</h5>
+                    <div className="col-md mt-3">
+                        <h5 className="font-weight-bold">Urban Gardener</h5>
                         <p>An online gardener booking<br/>website since 2021.<br/>With over 1000+ Gardeners.</p>
                     </div>
 
-                    <div class="col-md mt-3">
-                        <h5 class="font-weight-bold">Contact Us</h5>
-                        <ul class="list-unstyled">
+                    <div className="col-md mt-3">
+                        <h5 className="font-weight-bold">Contact Us</h5>
+                        <ul className="list-unstyled">
                             <li>
                                 <p>info@urbangardener.com</p>
                             </li>
@@ -29,9 +29,9 @@ return (
                         </ul>
                     </div>
 
-                    <div class="col-md mt-3">
-                        <h5 class=" font-weight-bold">Address</h5>
-                        <ul class="list-unstyled">
+                    <div className="col-md mt-3">
+                        <h5 className=" font-weight-bold">Address</h5>
+                        <ul className="list-unstyled">
                             <li>
                                 <p>Ernakulam, Kerala.</p>
                             </li>
@@ -41,16 +41,16 @@ return (
                         </ul>
                     </div>
 
-                    <div class="col-md mt-3">
-                        <h5 class="font-weight-bold">Social</h5>
-                        <ul class="list-unstyled">
-                            <li><a class="text-light text-decoration-none" href="#"> <Fbicon className="mx-1 mt-n1" /> Facebook
+                    <div className="col-md mt-3">
+                        <h5 className="font-weight-bold">Social</h5>
+                        <ul className="list-unstyled">
+                            <li><a className="text-light text-decoration-none" href="#"> <Fbicon className="mx-1 mt-n1" /> Facebook
                                 </a></li>
-                            <li><a class="text-light text-decoration-none" href="#"> <Twticon className="mx-1 mt-n1" /> Twitter
+                            <li><a className="text-light text-decoration-none" href="#"> <Twticon className="mx-1 mt-n1" /> Twitter
                                 </a></li>
-                            <li><a class="text-light text-decoration-none" href="#"> <Igicon className="mx-1 mt-n1" /> Instagram 
+                            <li><a className="text-light text-decoration-none" href="#"> <Igicon className="mx-1 mt-n1" /> Instagram 
                                 </a></li>
-                            <li><a class="text-light text-decoration-none" href="#"> <Yticon className="mx-1 mt-n1" /> Youtube
+                            <li><a className="text-light text-decoration-none" href="#"> <Yticon className="mx-1 mt-n1" /> Youtube
                                 </a></li>
                         </ul>
                     </div>
@@ -60,7 +60,7 @@ return (
 
             </div>
             <hr />
-            <div class="footer-copyright text-center py-1 " id="copyright">© 2022 Copyright</div>
+            <div className="footer-copyright text-center py-1 ">© 2022 Copyright</div>
 
         </footer>
     </Fragment>

@@ -38,7 +38,9 @@ const Sidebar = (props) => {
       e.preventDefault();
       localStorage.removeItem("token");
       props.setAuth(false);
-      toast.success("Successfully Logged Out!");
+      toast.success("Successfully Logged Out!",{
+        position: toast.POSITION.BOTTOM_RIGHT
+    });
     }
 
     useEffect(() => {
@@ -49,11 +51,11 @@ const Sidebar = (props) => {
 
     return (
         <Fragment>
-            <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" >
-                <span class="fs-4">{fname} {lname}</span>
+            <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" >
+                <span className="fs-4">{fname} {lname}</span>
                 <hr />
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
+                <ul className="nav nav-pills flex-column mb-auto">
+                    <li className="nav-item">
                         { isActive === "dashboard" ? 
                             <Link to="/dashboard" className="nav-link active sidebutton">
                                 <Person className="mx-1 mt-n1" /> Profile

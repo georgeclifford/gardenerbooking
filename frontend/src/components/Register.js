@@ -45,10 +45,14 @@ const Register = ({setAuth}) => {
                 localStorage.setItem("token", parseRes.token);
                 setAuth(true);
 
-                toast.success("Successfully Registered!");
+                toast.success("Successfully Registered!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
             } else {
                 setAuth(false);
-                toast.error(parseRes);
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
             }
             
         } catch (err) {
@@ -65,52 +69,52 @@ const Register = ({setAuth}) => {
                 <form onSubmit={onSubmitForm} className="row px-5">
 
                     <div class="col-lg-6 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">First Name</label>
-                        <input type="text" name="c_fname" value={c_fname} onChange={e => onChange(e)} class="form-control" id="exampleInputEmail1" placeholder="Last Name" required />
+                        <label class="form-label">First Name</label>
+                        <input type="text" name="c_fname" value={c_fname} onChange={e => onChange(e)} class="form-control" placeholder="Last Name" required />
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Last Name</label>
-                        <input type="text" name="c_lname" value={c_lname} onChange={e => onChange(e)} class="form-control" id="exampleInputEmail1" placeholder="First Name" required />
+                        <label class="form-label">Last Name</label>
+                        <input type="text" name="c_lname" value={c_lname} onChange={e => onChange(e)} class="form-control" placeholder="First Name" required />
                     </div>
 
                     <div class="col-lg-12 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <label class="form-label">Email</label>
                         <input type="email" name="username" value={username} onChange={e => onChange(e)} className="form-control" placeholder="example@email.com" required />
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Phone</label>
-                        <input type="text" name="c_phno" value={c_phno} onChange={e => onChange(e)} minLength="10" maxLength="10"  class="form-control" id="exampleInputEmail1" placeholder="9876543210" required />
+                        <label class="form-label">Phone</label>
+                        <input type="text" name="c_phno" value={c_phno} onChange={e => onChange(e)} minLength="10" maxLength="10"  class="form-control" placeholder="9876543210" required />
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Pincode</label>
-                        <input type="text" name="c_pin" value={c_pin} onChange={e => onChange(e)} minLength="6" maxLength="6" class="form-control" id="exampleInputEmail1" placeholder="Zip" required />
+                        <label class="form-label">Pincode</label>
+                        <input type="text" name="c_pin" value={c_pin} onChange={e => onChange(e)} minLength="6" maxLength="6" class="form-control" placeholder="Zip" required />
                     </div>
 
                     <div class="col-lg-4 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">House</label>
-                        <input type="text" name="c_house" value={c_house} onChange={e => onChange(e)} class="form-control" id="exampleInputEmail1" placeholder="House" required />
+                        <label class="form-label">House</label>
+                        <input type="text" name="c_house" value={c_house} onChange={e => onChange(e)} class="form-control" placeholder="House" required />
                     </div>
 
                     <div class="col-lg-4 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Street</label>
-                        <input type="text" name="c_street" value={c_street} onChange={e => onChange(e)} class="form-control" id="exampleInputEmail1" placeholder="Street" required />
+                        <label class="form-label">Street</label>
+                        <input type="text" name="c_street" value={c_street} onChange={e => onChange(e)} class="form-control" placeholder="Street" required />
                     </div>
 
                     <div class="col-lg-4 mb-3">
-                        <label for="exampleInputEmail1" class="form-label">District</label>
-                        <input type="text" name="c_dist" value={c_dist} onChange={e => onChange(e)} class="form-control" id="exampleInputEmail1" placeholder="District" required />
+                        <label class="form-label">District</label>
+                        <input type="text" name="c_dist" value={c_dist} onChange={e => onChange(e)} class="form-control" placeholder="District" required />
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <label class="form-label">Password</label>
                         <input type="password" name="password" minLength="5" value={password} onChange={e => onChange(e)} className="form-control" placeholder="********" required />
                     </div>
 
                     <div class="col-lg-6 mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
+                        <label class="form-label">Confirm Password</label>
                         <input type="password" name="confirmpass" value={confirmpass} onChange={e => onChange(e)} minLength="5" class="form-control" placeholder="********" required />
                     </div>
 

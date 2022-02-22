@@ -38,11 +38,15 @@ const Login = ({setAuth}) => {
 
                 setAuth(true);
 
-                toast.success("Successfully Logged In!");
+                toast.success("Successfully Logged In!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
             } else {
 
                 setAuth(false);
-                toast.error(parseRes);
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
             }
 
 
@@ -58,12 +62,12 @@ const Login = ({setAuth}) => {
             <form onSubmit={onSubmitForm} className="pad1 d-flex flex-column align-items-center">
                 <h1 className="mb-5">Login</h1>
                 <div className="col-lg-5 col-md-7 col-sm-8 mb-3">
-                    <label for="exampleInputEmail1" className="form-label">Email</label>
+                    <label className="form-label">Email</label>
                     <input type="email" name="username" value={username} onChange={e => onChange(e)} className="form-control" placeholder="example@email.com" required />
                 </div>
 
                 <div className="col-lg-5 col-md-7 col-sm-8 mb-3">
-                    <label for="exampleInputPassword1" className="form-label">Password</label>
+                    <label className="form-label">Password</label>
                     <input type="password" name="password" minLength="5" value={password} onChange={e => onChange(e)} className="form-control " placeholder="********" required />
                 </div>
 
