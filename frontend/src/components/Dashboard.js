@@ -61,7 +61,6 @@ const Dashboard = ({setAuth}) => {
 
     const onSubmitForm = async(e) => {
 
-
         try {
 
             const body = {user_id,c_fname,c_lname,c_phno,c_house,c_street,c_pin,c_dist};
@@ -82,14 +81,14 @@ const Dashboard = ({setAuth}) => {
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
 
-            e.preventDefault();
-
             } else {
 
                 toast.error(parseRes,{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
             }
+
+            e.preventDefault();
 
 
         } catch (err) {
@@ -151,7 +150,15 @@ const Dashboard = ({setAuth}) => {
 
             const parseRes = await response.json();
 
-            if(parseRes !== true) {
+            if(parseRes === true) {
+
+                localStorage.removeItem("token");
+                setAuth(false);
+                toast.success("Successfully Deactivated!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+
+            } else {
 
                 toast.error(parseRes,{
                     position: toast.POSITION.BOTTOM_RIGHT

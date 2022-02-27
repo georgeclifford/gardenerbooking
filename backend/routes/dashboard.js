@@ -37,9 +37,6 @@ router.get("/", authorization, async(req, res) => {
 router.post("/update", authorization, async(req, res) => {
     try {
 
-        //req.user has the payload
-        // res.json(req.user.id);
-
         const {user_id,c_fname,c_lname,c_phno,c_house,c_street,c_pin,c_dist} = req.body;
 
         const updatecust = await pool.query("UPDATE tbl_customer SET c_phno=$1, c_fname=$2, c_lname=$3, c_house=$4, c_street=$5, c_dist=$6, c_pin=$7 WHERE user_id=$8 RETURNING *",
@@ -63,9 +60,6 @@ router.post("/update", authorization, async(req, res) => {
 
 router.post("/change", authorization, async(req, res) => {
     try {
-
-        //req.user has the payload
-        // res.json(req.user.id);
 
         const {user_id,password,newpassword,confirmpassword} = req.body;
 
@@ -107,10 +101,7 @@ router.post("/change", authorization, async(req, res) => {
 
 router.post("/deactivate", authorization, async(req, res) => {
     try {
-
-        //req.user has the payload
-        // res.json(req.user.id);
-
+        
         const {user_id,password} = req.body;
 
         const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);
@@ -133,14 +124,6 @@ router.post("/deactivate", authorization, async(req, res) => {
             return res.status(401).json("Couldn't Deactivate Account!");
         }
         
-        else{
-                localStorage.removeItem("token");
-                props.setAuth(false);
-                toast.success("Successfully Deactivated!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-        }
-
         res.json(true);
 
     } catch (err) {
