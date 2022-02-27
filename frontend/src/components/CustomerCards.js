@@ -4,9 +4,6 @@ import Sidebar from "./Sidebar";
 
 const CustomerCards = ({setAuth}) => {
 
-    // const [c_fname,setFName] = useState("");
-    // const [c_lname,setLName] = useState("");
-
     const [isActive,setActive] = useState("cards");
 
     const [inputs, setInputs] = useState({
@@ -38,9 +35,6 @@ const CustomerCards = ({setAuth}) => {
             const parseRes = await response.json();
 
             // console.log(parseRes);
-
-            // setFName(parseRes.c_fname);
-            // setLName(parseRes.c_lname);
 
             setInputs({...inputs, fn: parseRes.c_fname,
                 ln: parseRes.c_lname, ph: parseRes.c_phno, hs: parseRes.c_house,

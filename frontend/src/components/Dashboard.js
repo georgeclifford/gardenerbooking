@@ -4,9 +4,6 @@ import Sidebar from "./Sidebar";
 
 const Dashboard = ({setAuth}) => {
 
-    // const [c_fname,setFName] = useState("");
-    // const [c_lname,setLName] = useState("");
-
     const [isActive,setActive] = useState("dashboard");
 
     const [inputs, setInputs] = useState({
@@ -23,13 +20,13 @@ const Dashboard = ({setAuth}) => {
         confirmpassword: "",
       });
 
-      const {user_id,c_fname,c_lname,username,c_phno,c_house,c_street,c_pin,c_dist,password,newpassword,confirmpassword} = inputs;
+      const {user_id,user_type,c_fname,c_lname,username,c_phno,c_house,c_street,c_pin,c_dist,password,newpassword,confirmpassword} = inputs;
     
       const onChange = (e) => {
           setInputs({...inputs,[e.target.name] : e.target.value});
       }
 
-    async function getName() {
+    async function getDetails() {
         try {
 
             const response = await fetch("http://localhost:5000/dashboard/", {
@@ -41,11 +38,9 @@ const Dashboard = ({setAuth}) => {
 
             // console.log(parseRes);
 
-            // setFName(parseRes.c_fname);
-            // setLName(parseRes.c_lname);
-
             setInputs({...inputs, 
                 user_id: parseRes.user_id,
+                user_type: parseRes.user_type,
                 username: parseRes.username,
                 c_fname: parseRes.c_fname,
                 c_lname: parseRes.c_lname, 
@@ -66,7 +61,6 @@ const Dashboard = ({setAuth}) => {
 
     const onSubmitForm = async(e) => {
 
-        e.preventDefault();
 
         try {
 
@@ -82,18 +76,83 @@ const Dashboard = ({setAuth}) => {
 
             // console.log(parseRes.token);
 
-            if(parseRes.token) {
+            if(parseRes) {
 
-                localStorage.setItem("token", parseRes.token);
+                toast.success("Updated Successfully!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
 
-                setAuth(true);
+            e.preventDefault();
 
-                toast.success("Successfully Updated!",{
+            } else {
+
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
+    const onChangePassword = async(e) => {
+
+        e.preventDefault();
+
+        try {
+
+            const body = {user_id,password,newpassword,confirmpassword};
+            
+            const response = await fetch("http://localhost:5000/dashboard/change",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            if(parseRes === true) {
+
+                toast.success("Password Changed Successfully!",{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
             } else {
 
-                setAuth(false);
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
+    const onDeactivate = async(e) => {
+
+        e.preventDefault();
+
+        try {
+
+            const body = {user_id,password};
+            
+            const response = await fetch("http://localhost:5000/dashboard/deactivate",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            if(parseRes !== true) {
+
                 toast.error(parseRes,{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
@@ -108,18 +167,15 @@ const Dashboard = ({setAuth}) => {
     }
 
     useEffect(() => {
-        getName();
+        getDetails();
     }, [0]);
-
-    // $(".alert").delay(2000).slideUp(200, function () {
-    //     $(this).alert('close');
-    //   });
 
     return (
         <Fragment>
             <div className="d-flex">
-                <Sidebar setAuth={setAuth} isActive={isActive} />
+                <Sidebar setAuth={setAuth} isActive={isActive}/>
                 <div className="pad1 col-lg-7 col-md-7 col-sm-7 m-auto">
+                    
                     <h1 className="mb-5 text-center">Profile</h1>
                     <form onSubmit={onSubmitForm} className="row px-5">
 
@@ -163,17 +219,15 @@ const Dashboard = ({setAuth}) => {
                             <input type="text" name="c_dist" value={inputs.c_dist} onChange={e => onChange(e)} className="form-control" placeholder="District" required />
                         </div>
 
-                        <div className="col-lg-12 col-md-6 col-sm-6 mx-1 mt-3">
-                            <button className="btn btn-dark col-lg-3 col-md-12 col-sm-12"> Update Profile </button>
+                        <div className="col-lg-12 col-md-6 col-sm-6 ">
+                            <button className="btn btn-dark mx-1 mt-3 col-lg-3 col-md-12 col-sm-12"> Update Profile </button>
+                            <a className="btn btn-dark mx-1 mt-3 col-lg-3 col-md-12 col-sm-12" data-bs-toggle="modal" data-bs-target="#changepass">Change Password</a>
+                            <a className="btn btn-danger mx-1 mt-3 col-lg-3 col-md-12 col-sm-12" data-bs-toggle="modal" data-bs-target="#deactivate">Deactivate Account</a>
                         </div>
 
                     </form>
 
-                    <div className=" col-lg-11 col-md-6 col-sm-6 mx-5">
-                            <button className="btn btn-dark mx-1 mt-4 col-lg-3 col-md-10 col-sm-10" data-bs-toggle="modal" data-bs-target="#changepass">Change Password</button>
-                            <button className="btn btn-danger mx-1 mt-4 col-lg-3 col-md-10 col-sm-10" data-bs-toggle="modal" data-bs-target="#deactivate">Deactivate Account</button>
-                    </div>
-
+                    {/* Change Password Modal */}
                     <div className="modal fade" id="changepass" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1"
                         aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div className="modal-dialog modal-dialog-centered">
@@ -184,7 +238,7 @@ const Dashboard = ({setAuth}) => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <form className=" row g-3 needs-validation">
+                            <form onSubmit={onChangePassword} className=" row g-3 needs-validation">
                             <div className="modal-body d-flex flex-column align-items-center">
 
                                 <div className="col-md-8 mb-3">
@@ -220,6 +274,7 @@ const Dashboard = ({setAuth}) => {
                         </div>
                     </div>
 
+                    {/* Deactivate Account Modal */}
                     <div className="modal fade" id="deactivate" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1"
                         aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div className="modal-dialog modal-dialog-centered">
@@ -230,7 +285,7 @@ const Dashboard = ({setAuth}) => {
                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <form className=" row g-3 needs-validation">
+                            <form onSubmit={onDeactivate} className=" row g-3 needs-validation">
                             <div className="modal-body d-flex flex-column align-items-center">
 
                                 <div className="col-md-8 mb-3">

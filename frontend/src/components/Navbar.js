@@ -19,8 +19,17 @@ const Navbar = (props) => {
 
             // console.log(parseRes);
 
-            setFName(parseRes.c_fname);
-            setLName(parseRes.c_lname);
+            if(parseRes.user_type === "admin")
+            {
+                setFName("Admin");
+                setLName("");
+            }
+    
+            else if(parseRes.user_type === "customer"){
+    
+              setFName(parseRes.c_fname);
+              setLName(parseRes.c_lname);
+            }
             
         } catch (err) {
 
