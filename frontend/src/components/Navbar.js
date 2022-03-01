@@ -30,6 +30,12 @@ const Navbar = (props) => {
               setFName(parseRes.c_fname);
               setLName(parseRes.c_lname);
             }
+
+            else if(parseRes.user_type === "staff"){
+
+                setFName(parseRes.s_fname);
+                setLName(parseRes.s_lname);
+            }
             
         } catch (err) {
 
@@ -56,24 +62,23 @@ const Navbar = (props) => {
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
                 <div className="container-fluid my-2">
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        data-bs-target="#navbarTogglerDemo03">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <a className="navbar-brand" href="http://localhost:3000">Urban Gardener</a>
                     <div className="collapse navbar-collapse mx-3" id="navbarTogglerDemo03">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">Balcony Gardener</a>
+                                <a className="nav-link" href="#">Balcony Gardener</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">Flower Gardener</a>
+                                <a className="nav-link" href="#">Flower Gardener</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">Vegetable Gardener</a>
+                                <a className="nav-link" href="#">Vegetable Gardener</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" aria-current="page" href="#">About Us</a>
+                                <a className="nav-link" href="#">About Us</a>
                             </li>
                         </ul>
                         <div className="d-flex">

@@ -24,6 +24,14 @@ router.get("/", authorization, async(req, res) => {
             res.json(login.rows[0]);
         }
 
+        else if(login.rows[0].user_type === "staff"){
+
+            const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
+            
+            res.json(user.rows[0]);
+        }
+        
+
         // console.log(user.rows[0]);
 
     } catch (err) {
@@ -37,18 +45,36 @@ router.get("/", authorization, async(req, res) => {
 router.post("/update", authorization, async(req, res) => {
     try {
 
-        const {user_id,c_fname,c_lname,c_phno,c_house,c_street,c_pin,c_dist} = req.body;
+        const {user_id,user_type,fname,lname,phno,house,street,pin,dist} = req.body;
 
-        const updatecust = await pool.query("UPDATE tbl_customer SET c_phno=$1, c_fname=$2, c_lname=$3, c_house=$4, c_street=$5, c_dist=$6, c_pin=$7 WHERE user_id=$8 RETURNING *",
-        [c_phno, c_fname, c_lname, c_house, c_street, c_dist, c_pin, user_id]);
+        if(user_type === "customer"){
 
-        if(updatecust.rows.length === 0){
-            return res.status(401).json("Updation Failed!");
+            const updatecust = await pool.query("UPDATE tbl_customer SET c_phno=$1, c_fname=$2, c_lname=$3, c_house=$4, c_street=$5, c_dist=$6, c_pin=$7 WHERE user_id=$8 RETURNING *",
+            [phno, fname, lname, house, street, dist, pin, user_id]);
+
+            if(updatecust.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
+
+            res.json(user.rows[0]);
         }
 
-        const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
+        else if(user_type === "staff"){
 
-        res.json(user.rows[0]);
+            const updatestaff = await pool.query("UPDATE tbl_staff SET s_phno=$1, s_fname=$2, s_lname=$3, s_house=$4, s_street=$5, s_dist=$6, s_pin=$7 WHERE user_id=$8 RETURNING *",
+            [phno, fname, lname, house, street, dist, pin, user_id]);
+
+            if(updatestaff.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
+
+            res.json(user.rows[0]);
+
+        }
 
     } catch (err) {
 
@@ -58,7 +84,7 @@ router.post("/update", authorization, async(req, res) => {
     }
 });
 
-router.post("/change", authorization, async(req, res) => {
+router.post("/changepassword", authorization, async(req, res) => {
     try {
 
         const {user_id,password,newpassword,confirmpassword} = req.body;
@@ -101,7 +127,7 @@ router.post("/change", authorization, async(req, res) => {
 
 router.post("/deactivate", authorization, async(req, res) => {
     try {
-        
+
         const {user_id,password} = req.body;
 
         const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);
@@ -124,6 +150,90 @@ router.post("/deactivate", authorization, async(req, res) => {
             return res.status(401).json("Couldn't Deactivate Account!");
         }
         
+        res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/newcard", authorization, async(req, res) => {
+    try {
+
+        const {cust_id,card_no,card_name,bank_name,card_type,exp_date} = req.body;
+
+        const newCard = await pool.query("INSERT INTO tbl_card (cust_id, card_no, card_name, bank_name, card_type, exp_date, card_status) VALUES ($1, $2, $3, $4, $5, $6, 'active') RETURNING *",
+        [cust_id, card_no, card_name, bank_name, card_type, exp_date]);
+
+        if(newCard.rows.length === 0){
+            return res.status(401).json("Couldn't Change Password!");
+        }
+
+        res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/carddetails", authorization, async(req, res) => {
+    try {
+
+        const {cust_id} = req.body;
+
+        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1", [cust_id]);
+
+        res.json(cards.rows[0]);
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/addstaff", authorization, async(req, res) => {
+    try {
+
+        const {fname,lname,username,phno,house,street,pin,dist,password,confirmpassword} = req.body;
+
+        if(password !== confirmpassword){
+            return res.status(401).json("Password Does Not Match!");
+        }
+
+        const logCheck = await pool.query("SELECT * FROM tbl_login WHERE username = $1", [username]);
+
+        //res.json(user.rows);
+
+        if (logCheck.rows.length !==0){
+            return res.status(401).json("User Already Exist!");
+        }
+
+        const saltRound=10;
+        const salt = await bcrypt.genSalt(saltRound);
+        const bcryptpassword = await bcrypt.hash(password, salt);
+
+        const newStaffLog = await pool.query("INSERT INTO tbl_login (username, password, user_type, l_status) VALUES ($1, $2, 'staff', 'active') RETURNING *",
+        [username, bcryptpassword]);
+
+        const uid = newStaffLog.rows[0].user_id;
+
+        var dt = new Date();
+
+        const newStaff = await pool.query("INSERT INTO tbl_staff (s_phno, user_id, s_fname, s_lname, s_house, s_street, s_dist, s_pin, s_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
+        [phno, uid, fname, lname, house, street, dist, pin, dt]);
+
+        if(newStaff.rows.length === 0){
+            return res.status(401).json("Couldn't Add Staff!");
+        }
+
         res.json(true);
 
     } catch (err) {
