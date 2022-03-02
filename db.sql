@@ -34,6 +34,14 @@ c_date date NOT NULL,
 FOREIGN KEY (user_id) REFERENCES tbl_login (user_id)
 )
 
+CREATE TABLE tbl_category(
+cat_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+cat_name varchar(50) NOT NULL,
+cat_desc varchar(500) NOT NULL,
+cat_price decimal(8,2) NOT NULL,
+cat_status varchar(10) NOT NULL
+)
+
 CREATE TABLE tbl_card(
 card_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 cust_id integer NOT NULL,

@@ -1,7 +1,7 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
 
 const CustomerCards = ({setAuth}) => {
 

@@ -1,7 +1,7 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
 
 const Dashboard = ({setAuth}) => {
 
@@ -251,7 +251,7 @@ const Dashboard = ({setAuth}) => {
                 {
                     user_type === "admin" ?
 
-                            <div className="pad1 col-lg-7 col-md-7 col-sm-7 m-auto">
+                            <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
                             
                                 <h1 className="mb-5 text-center">Staff Details</h1>
 
@@ -324,7 +324,7 @@ const Dashboard = ({setAuth}) => {
 
                                     <div className="modal-content">
                                         <div className="modal-header">
-                                            <h5 className="modal-title" id="staticBackdropLabel">New Card</h5>
+                                            <h5 className="modal-title" id="staticBackdropLabel">New Staff</h5>
                                             <button type="button" className="btn-close" data-bs-dismiss="modal" ></button>
                                         </div>
 

@@ -18,6 +18,13 @@ import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import CustomerCards from './components/CustomerCards';
 import CustomerBookings from './components/CustomerBookings';
+import CustomerList from './components/CustomerList';
+import Category from './components/Category';
+import Bookings from './components/Bookings';
+import Reports from './components/Reports';
+import Specializations from './components/Specializations';
+import Allocations from './components/Allocations';
+import Feedbacks from './components/Feedbacks';
 
 toast.configure();
 
@@ -65,6 +72,13 @@ function App() {
             <Route exact path="/dashboard" element = { isAuthenticated ? ( <Dashboard setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
             <Route exact path="/customercards" element = { isAuthenticated ? ( <CustomerCards setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
             <Route exact path="/customerbookings" element = { isAuthenticated ? ( <CustomerBookings setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/customerlist" element = { isAuthenticated ? ( <CustomerList setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/category" element = { isAuthenticated ? ( <Category setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/bookings" element = { isAuthenticated ? ( <Bookings setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/reports" element = { isAuthenticated ? ( <Reports setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/specializations" element = { isAuthenticated ? ( <Specializations setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/allocations" element = { isAuthenticated ? ( <Allocations setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/feedbacks" element = { isAuthenticated ? ( <Feedbacks setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
           </Routes>
         <Footer />
       </Router>

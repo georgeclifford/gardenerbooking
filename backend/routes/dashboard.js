@@ -169,7 +169,7 @@ router.post("/newcard", authorization, async(req, res) => {
         [cust_id, card_no, card_name, bank_name, card_type, exp_date]);
 
         if(newCard.rows.length === 0){
-            return res.status(401).json("Couldn't Change Password!");
+            return res.status(401).json("Couldn't Add Card!");
         }
 
         res.json(true);
@@ -232,6 +232,28 @@ router.post("/addstaff", authorization, async(req, res) => {
 
         if(newStaff.rows.length === 0){
             return res.status(401).json("Couldn't Add Staff!");
+        }
+
+        res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/newcategory", authorization, async(req, res) => {
+    try {
+
+        const {cat_name,cat_desc,cat_price} = req.body;
+
+        const newCategory = await pool.query("INSERT INTO tbl_category (cat_name, cat_desc, cat_price, cat_status) VALUES ($1, $2, $3, 'active') RETURNING *",
+        [cat_name, cat_desc, cat_price]);
+
+        if(newCategory.rows.length === 0){
+            return res.status(401).json("Couldn't Add Category!");
         }
 
         res.json(true);
