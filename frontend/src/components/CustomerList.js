@@ -77,41 +77,28 @@ const CustomerList = ({setAuth}) => {
                         <tbody>
                             <tr>
                             <td>1</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                            <td>Jerin</td>
+                            <td>Bhai</td>
+                            <td>bhai@email.com</td>
                             <td>1234567890</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
+                            <td>valo</td>
+                            <td>jett</td>
+                            <td>ekm</td>
+                            <td>682028</td>
+                            <td>2022-02-15</td>
                             <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
                             </tr>
                             <tr>
                             <td>2</td>
-                            <td>Joe</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            <td>@1234567890</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
-                            <tr>
-                            <td>3</td>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@mdo</td>
-                            <td>@1234567890</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
+                            <td>George</td>
+                            <td>Clifford</td>
+                            <td>grg@email.com</td>
+                            <td>8089966348</td>
+                            <td>Nambiaparambil</td>
+                            <td>Sreekala Road</td>
+                            <td>Ernakulam</td>
+                            <td>682028</td>
+                            <td>2022-02-17</td>
                             <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
                             </tr>
                         </tbody>

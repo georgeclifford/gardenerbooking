@@ -182,14 +182,18 @@ router.post("/newcard", authorization, async(req, res) => {
     }
 });
 
-router.post("/carddetails", authorization, async(req, res) => {
+router.get("/carddetails", authorization, async(req, res) => {
     try {
 
-        const {cust_id} = req.body;
+        let user_id='';
 
-        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1", [cust_id]);
+        user_id = req.header("user_id");
 
-        res.json(cards.rows[0]);
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1", [cust.rows[0].cust_id]);
+
+        res.json(cards.rows);
 
     } catch (err) {
 

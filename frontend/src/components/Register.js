@@ -40,6 +40,11 @@ const Register = ({setAuth}) => {
 
             //console.log(parseRes);
 
+            if(parseRes.user_id){
+                console.log(parseRes.user_id);
+                localStorage.setItem("user_id", parseRes.user_id)
+            }
+
             if(parseRes.token) {
 
                 localStorage.setItem("token", parseRes.token);
@@ -68,58 +73,58 @@ const Register = ({setAuth}) => {
                 <h1 className="mb-5 text-center">Register</h1>
                 <form onSubmit={onSubmitForm} className="row px-5">
 
-                    <div class="col-lg-6 mb-3">
-                        <label class="form-label">First Name</label>
-                        <input type="text" name="c_fname" value={c_fname} onChange={e => onChange(e)} class="form-control" placeholder="Last Name" required />
+                    <div className="col-lg-6 mb-3">
+                        <label className="form-label">First Name</label>
+                        <input type="text" name="c_fname" value={c_fname} onChange={e => onChange(e)} className="form-control" placeholder="Last Name" required />
                     </div>
 
-                    <div class="col-lg-6 mb-3">
-                        <label class="form-label">Last Name</label>
-                        <input type="text" name="c_lname" value={c_lname} onChange={e => onChange(e)} class="form-control" placeholder="First Name" required />
+                    <div className="col-lg-6 mb-3">
+                        <label className="form-label">Last Name</label>
+                        <input type="text" name="c_lname" value={c_lname} onChange={e => onChange(e)} className="form-control" placeholder="First Name" required />
                     </div>
 
-                    <div class="col-lg-12 mb-3">
-                        <label class="form-label">Email</label>
+                    <div className="col-lg-12 mb-3">
+                        <label className="form-label">Email</label>
                         <input type="email" name="username" value={username} onChange={e => onChange(e)} className="form-control" placeholder="example@email.com" required />
                     </div>
 
-                    <div class="col-lg-6 mb-3">
-                        <label class="form-label">Phone</label>
-                        <input type="text" name="c_phno" value={c_phno} onChange={e => onChange(e)} minLength="10" maxLength="10"  class="form-control" placeholder="9876543210" required />
+                    <div className="col-lg-6 mb-3">
+                        <label className="form-label">Phone</label>
+                        <input type="text" name="c_phno" value={c_phno} onChange={e => onChange(e)} minLength="10" maxLength="10"  className="form-control" placeholder="9876543210" required />
                     </div>
 
-                    <div class="col-lg-6 mb-3">
-                        <label class="form-label">Pincode</label>
-                        <input type="text" name="c_pin" value={c_pin} onChange={e => onChange(e)} minLength="6" maxLength="6" class="form-control" placeholder="Zip" required />
+                    <div className="col-lg-6 mb-3">
+                        <label className="form-label">Pincode</label>
+                        <input type="text" name="c_pin" value={c_pin} onChange={e => onChange(e)} minLength="6" maxLength="6" className="form-control" placeholder="Zip" required />
                     </div>
 
-                    <div class="col-lg-4 mb-3">
-                        <label class="form-label">House</label>
-                        <input type="text" name="c_house" value={c_house} onChange={e => onChange(e)} class="form-control" placeholder="House" required />
+                    <div className="col-lg-4 mb-3">
+                        <label className="form-label">House</label>
+                        <input type="text" name="c_house" value={c_house} onChange={e => onChange(e)} className="form-control" placeholder="House" required />
                     </div>
 
-                    <div class="col-lg-4 mb-3">
-                        <label class="form-label">Street</label>
-                        <input type="text" name="c_street" value={c_street} onChange={e => onChange(e)} class="form-control" placeholder="Street" required />
+                    <div className="col-lg-4 mb-3">
+                        <label className="form-label">Street</label>
+                        <input type="text" name="c_street" value={c_street} onChange={e => onChange(e)} className="form-control" placeholder="Street" required />
                     </div>
 
-                    <div class="col-lg-4 mb-3">
-                        <label class="form-label">District</label>
-                        <input type="text" name="c_dist" value={c_dist} onChange={e => onChange(e)} class="form-control" placeholder="District" required />
+                    <div className="col-lg-4 mb-3">
+                        <label className="form-label">District</label>
+                        <input type="text" name="c_dist" value={c_dist} onChange={e => onChange(e)} className="form-control" placeholder="District" required />
                     </div>
 
-                    <div class="col-lg-6 mb-3">
-                        <label class="form-label">Password</label>
+                    <div className="col-lg-6 mb-3">
+                        <label className="form-label">Password</label>
                         <input type="password" name="password" minLength="5" value={password} onChange={e => onChange(e)} className="form-control" placeholder="********" required />
                     </div>
 
-                    <div class="col-lg-6 mb-3">
-                        <label class="form-label">Confirm Password</label>
-                        <input type="password" name="confirmpass" value={confirmpass} onChange={e => onChange(e)} minLength="5" class="form-control" placeholder="********" required />
+                    <div className="col-lg-6 mb-3">
+                        <label className="form-label">Confirm Password</label>
+                        <input type="password" name="confirmpass" value={confirmpass} onChange={e => onChange(e)} minLength="5" className="form-control" placeholder="********" required />
                     </div>
 
-                    <div class="col-lg-12 d-grid gap-4">
-                        <button class="btn btn-dark d-block mt-4">Sign Up</button>
+                    <div className="col-lg-12 d-grid gap-4">
+                        <button className="btn btn-dark d-block mt-4">Sign Up</button>
                         <p className="text-center">
                             Already have an account? <Link to="/login">Login</Link>
                         </p>

@@ -32,6 +32,11 @@ const Login = ({setAuth}) => {
 
             //console.log(parseRes);
 
+            if(parseRes.user_id){
+                console.log(parseRes.user_id);
+                localStorage.setItem("user_id", parseRes.user_id)
+            }
+
             if(parseRes.token) {
 
                 localStorage.setItem("token", parseRes.token);

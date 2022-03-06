@@ -278,41 +278,15 @@ const Dashboard = ({setAuth}) => {
                                     <tbody>
                                         <tr>
                                         <td>1</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                        <td>1234567890</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                                        </tr>
-                                        <tr>
-                                        <td>2</td>
-                                        <td>Joe</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                        <td>@1234567890</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                                        </tr>
-                                        <tr>
-                                        <td>3</td>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@mdo</td>
-                                        <td>@1234567890</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
-                                        <td>@mdo</td>
+                                        <td>James</td>
+                                        <td>Hendrix</td>
+                                        <td>jimi@ug.com</td>
+                                        <td>8880069420</td>
+                                        <td>Rock</td>
+                                        <td>Experienced</td>
+                                        <td>Seattle</td>
+                                        <td>694200</td>
+                                        <td>2022-03-01</td>
                                         <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
                                         </tr>
                                     </tbody>

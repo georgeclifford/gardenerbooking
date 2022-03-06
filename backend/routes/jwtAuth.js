@@ -35,17 +35,17 @@ router.post("/register", validInfo, async(req,res) => {
         const newUser = await pool.query("INSERT INTO tbl_login (username, password, user_type, l_status) VALUES ($1, $2, 'customer', 'active') RETURNING *",
         [username, bcryptpassword]);
 
-        const uid = newUser.rows[0].user_id;
+        const user_id = newUser.rows[0].user_id;
 
         var dt = new Date();
 
         const newCust = await pool.query("INSERT INTO tbl_customer (c_phno, user_id, c_fname, c_lname, c_house, c_street, c_dist, c_pin, c_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
-        [c_phno, uid, c_fname, c_lname, c_house, c_street, c_dist, c_pin, dt]);
+        [c_phno, user_id, c_fname, c_lname, c_house, c_street, c_dist, c_pin, dt]);
 
         //5. generating jwt token
         const token = jwtGenerator(newUser.rows[0].user_id);
 
-        res.json({token});
+        return res.json({ token, user_id });
         
     } catch (err) {
         console.error(err.message);
@@ -78,7 +78,9 @@ router.post("/login", validInfo, async (req, res) => {
         //4. give them the jwt token
         const token = jwtGenerator(user.rows[0].user_id);
 
-        res.json({token});
+        const user_id = user.rows[0].user_id;
+
+        return res.json({ token, user_id });
         
     } catch (err) {
         console.error(err.message);

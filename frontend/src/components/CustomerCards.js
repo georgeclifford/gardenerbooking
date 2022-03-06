@@ -45,39 +45,34 @@ const CustomerCards = ({setAuth}) => {
         }
     }
 
-    const getCardDetails = async(e) => {
+    const [data, setData] = useState([]);
 
-        e.preventDefault();
+    async function getCardDetails() {
 
         try {
-
-            const body = {cust_id};
             
-            const response = await fetch("http://localhost:5000/dashboard/carddetails",{
-                method: "POST",
-                headers: {"Content-Type": "application/json", token: localStorage.token},
-                body: JSON.stringify(body)
+            const response = await fetch("http://localhost:5000/dashboard/carddetails", {
+                method: "GET",
+                headers: {token: localStorage.token, user_id: localStorage.user_id}
             });
 
             const parseRes = await response.json();
 
+            setData(parseRes);
+
             // console.log(parseRes.token);
 
-            setInputs({...inputs, 
-                cust_id: parseRes.cust_id,
-                card_no: parseRes.card_no,
-                card_name: parseRes.card_name,
-                bank_name: parseRes.bank_name,
-                card_type: parseRes.card_type,
-                exp_date: parseRes.exp_date,
-                card_status: parseRes.card_status
-            });
 
         } catch (err) {
 
             console.error(err.message);
             
         }
+    }
+
+    function formatDate(stringDate){
+        var date=new Date(stringDate);
+        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
     }
 
     const onSubmitForm = async(e) => {
@@ -136,6 +131,7 @@ const CustomerCards = ({setAuth}) => {
                     </div>
 
                     <Table bordered hover responsive>
+                        
                         <thead>
                             <tr>
                             <th>Sl. No.</th>
@@ -148,17 +144,20 @@ const CustomerCards = ({setAuth}) => {
                             </tr>
                         </thead>
                         <tbody>
-
-                            <tr>
-                            <td>1</td>
-                            <td>{card_no}</td>
-                            <td>{card_name}</td>
-                            <td>{bank_name}</td>
-                            <td>{card_type}</td>
-                            <td>{exp_date}</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
-
+                        {
+                            data.map((item, index) => ( // access directly from array
+                                
+                                <tr key={item.card_id}>
+                                    <th scope="row">{index+1}</th>
+                                    <td>{item.card_no}</td>
+                                    <td>{item.card_name}</td>
+                                    <td>{item.bank_name}</td>
+                                    <td>{item.card_type}</td>
+                                    <td>{formatDate(item.exp_date)}</td>
+                                    <td><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
+                                </tr>
+                                ))
+                        }
                         </tbody>
                     </Table>
 
