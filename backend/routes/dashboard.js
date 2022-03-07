@@ -3,6 +3,8 @@ const pool = require("../db");
 const authorization = require("../middleware/authorization");
 const bcrypt = require("bcrypt");
 
+//fetch
+
 router.get("/", authorization, async(req, res) => {
     try {
 
@@ -30,9 +32,6 @@ router.get("/", authorization, async(req, res) => {
             
             res.json(user.rows[0]);
         }
-        
-
-        // console.log(user.rows[0]);
 
     } catch (err) {
 
@@ -41,6 +40,101 @@ router.get("/", authorization, async(req, res) => {
         
     }
 });
+
+router.get("/custdetails", authorization, async(req, res) => {
+    try {
+
+        const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = l.user_id");
+
+        res.json(user.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.get("/staffdetails", authorization, async(req, res) => {
+    try {
+
+        const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = l.user_id");
+
+        res.json(user.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.get("/carddetails", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1", [cust.rows[0].cust_id]);
+
+        res.json(cards.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.get("/categorydetails", authorization, async(req, res) => {
+    try {
+
+        const cat = await pool.query("SELECT * FROM tbl_category");
+
+        res.json(cat.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.get("/specdetails", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const staff = await pool.query("SELECT staff_id FROM tbl_staff WHERE user_id = $1 ", [user_id]);
+
+        staff_id = staff.rows[0].staff_id;
+
+        const spec = await pool.query("SELECT * FROM tbl_specchild s, tbl_category c WHERE s.sm_id IN ( SELECT sm_id FROM tbl_specmaster WHERE staff_id = $1) AND s.cat_id=c.cat_id", [staff_id]);
+
+        res.json(spec.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+//edit
 
 router.post("/update", authorization, async(req, res) => {
     try {
@@ -135,7 +229,7 @@ router.post("/deactivate", authorization, async(req, res) => {
         //3. check if the incomming password is the same as the database password
         const validPassword = await bcrypt.compare(password, log.rows[0].password);
 
-        //console.log(validpassword);
+        
 
         if(!validPassword){
             return res.status(401).json("Incorrect Password!");
@@ -160,6 +254,8 @@ router.post("/deactivate", authorization, async(req, res) => {
     }
 });
 
+//add
+
 router.post("/newcard", authorization, async(req, res) => {
     try {
 
@@ -173,27 +269,6 @@ router.post("/newcard", authorization, async(req, res) => {
         }
 
         res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.get("/carddetails", authorization, async(req, res) => {
-    try {
-
-        let user_id='';
-
-        user_id = req.header("user_id");
-
-        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
-
-        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1", [cust.rows[0].cust_id]);
-
-        res.json(cards.rows);
 
     } catch (err) {
 
@@ -261,6 +336,91 @@ router.post("/newcategory", authorization, async(req, res) => {
         }
 
         res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/newspec", authorization, async(req, res) => {
+    try {
+
+        const {cat_id} = req.body;
+
+        let sm_id='';
+
+        let staff_id='';
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const staff = await pool.query("SELECT staff_id FROM tbl_staff WHERE user_id = $1 ", [user_id]);
+
+        staff_id = staff.rows[0].staff_id;
+
+        const SpecMast = await pool.query("SELECT * FROM tbl_specmaster WHERE staff_id = $1", [staff_id]);
+
+        if(SpecMast.rows.length === 0)
+        {
+
+            const newSpecMast = await pool.query("INSERT INTO tbl_specmaster (staff_id) VALUES ($1) RETURNING *",
+            [staff_id]);
+
+            if(newSpecMast.rows.length === 0){
+                return res.status(401).json("Action Failed!");
+            }
+
+            sm_id = newSpecMast.rows[0].sm_id;
+
+            const SpecChild = await pool.query("SELECT * FROM tbl_specchild WHERE sm_id = $1 AND cat_id = $2", [sm_id, cat_id]);
+
+            if(SpecChild.rows.length === 0){
+                    
+                const newSpecChild = await pool.query("INSERT INTO tbl_specchild (sm_id, cat_id, sc_status) VALUES ($1, $2, 'active') RETURNING *",
+                [sm_id, cat_id]);
+
+                if(newSpecChild.rows.length === 0){
+                    return res.status(401).json("Action Failed!");
+                }
+                
+                return res.json(true);
+            }
+
+            else {
+
+                return res.status(401).json("Category Already Added!");
+
+            }
+            
+        }
+
+        sm_id = SpecMast.rows[0].sm_id;
+
+        // console.log(cat_id);
+
+            const SpecChild = await pool.query("SELECT * FROM tbl_specchild WHERE sm_id = $1 AND cat_id = $2", [sm_id, cat_id]);
+
+            if(SpecChild.rows.length === 0){
+                    
+                const newSpecChild = await pool.query("INSERT INTO tbl_specchild (sm_id, cat_id, sc_status) VALUES ($1, $2, 'active') RETURNING *",
+                [sm_id, cat_id]);
+
+                if(newSpecChild.rows.length === 0){
+                    return res.status(401).json("Action Failed!");
+                }
+                
+                res.json(true);
+            }
+
+            else {
+
+                return res.status(401).json("Specialization Already Added!");
+
+            }
 
     } catch (err) {
 

@@ -26,3 +26,7 @@
 .mt-n1 {
   margin-top: -0.2rem !important;
 }
+
+.wide {
+  width: max-content !important;
+}

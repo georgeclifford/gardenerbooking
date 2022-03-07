@@ -19,24 +19,24 @@ const Category = ({setAuth}) => {
           setInputs({...inputs,[e.target.name] : e.target.value});
       }
 
-    async function getDetails() {
-        try {
+    const [data, setData] = useState([]);
 
-            const response = await fetch("http://localhost:5000/dashboard/", {
+    async function getCategoryDetails() {
+
+        try {
+            
+            const response = await fetch("http://localhost:5000/dashboard/categorydetails", {
                 method: "GET",
                 headers: {token: localStorage.token}
             });
 
             const parseRes = await response.json();
 
-            // console.log(parseRes);
+            setData(parseRes);
 
-            setInputs({...inputs, 
-                cat_name: parseRes.cat_name,
-                cat_desc: parseRes.cat_desc, 
-                cat_price: parseRes.cat_price
-            });
-            
+            // console.log(parseRes.token);
+
+
         } catch (err) {
 
             console.error(err.message);
@@ -83,19 +83,19 @@ const Category = ({setAuth}) => {
     }
 
     useEffect(() => {
-        getDetails();
+        getCategoryDetails();
     }, [0]);
 
     return (
         <Fragment>
             <div className="d-flex">
                 <Sidebar setAuth={setAuth} isActive={isActive} />
-                <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
+                <div className="pad1 col-lg-9 col-md-9 col-sm-9 mx-auto">
                     <h1 className="mb-3 text-center">Category Details</h1>
                     <div className="d-flex justify-content-end">
                         <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newstaff">New Category</button>
                     </div>
-                    <Table bordered hover responsive>
+                    <Table bordered hover responsive >
                         <thead>
                             <tr>
                             <th>Sl. No.</th>
@@ -106,27 +106,21 @@ const Category = ({setAuth}) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <td>1</td>
-                            <td>Balcony Gardening</td>
-                            <td>Book a gardener for your balcony gardening needs.</td>
-                            <td>Rs.100</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
-                            <tr>
-                            <td>2</td>
-                            <td>Flower Gardening</td>
-                            <td>Book a gardener for your flower gardening needs.</td>
-                            <td>Rs.200</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
-                            <tr>
-                            <td>3</td>
-                            <td>Vegetable Gardening</td>
-                            <td>Book a gardener for your vegetable gardening needs.</td>
-                            <td>Rs.300</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
+                        {
+                            data.map((item, index) => ( // access directly from array
+                                
+                                <tr key={item.cat_id}>
+                                    <th scope="row">{index+1}</th>
+                                    <td>{item.cat_name}</td>
+                                    <td>{item.cat_desc}</td>
+                                    <td>{item.cat_price}</td>
+                                    <td className="text-center d-flex">
+                                        <button className="btn btn-sm btn-outline-success">Edit</button>
+                                        <button className="btn btn-sm btn-outline-danger mx-1">Deactivate</button>
+                                    </td>
+                                </tr>
+                                ))
+                        }
                         </tbody>
                     </Table>
 

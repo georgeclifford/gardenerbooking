@@ -48,8 +48,23 @@ cust_id integer NOT NULL,
 card_no numeric(16) NOT NULL,
 card_name varchar(25) NOT NULL,
 bank_name varchar(25) NOT NULL,
-card_type varchar(10) NOT NULL,
+card_type varchar(15) NOT NULL,
 exp_date varchar(25) NOT NULL,
 card_status varchar(10) NOT NULL,
 FOREIGN KEY (cust_id) REFERENCES tbl_customer (cust_id)
+)
+
+CREATE TABLE tbl_specmaster(
+sm_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+staff_id integer NOT NULL,
+FOREIGN KEY (staff_id) REFERENCES tbl_staff (staff_id)
+)
+
+CREATE TABLE tbl_specchild(
+sc_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+sm_id integer NOT NULL,
+cat_id integer NOT NULL,
+sc_status varchar(10) NOT NULL,
+FOREIGN KEY (sm_id) REFERENCES tbl_specmaster (sm_id),
+FOREIGN KEY (cat_id) REFERENCES tbl_category (cat_id)
 )

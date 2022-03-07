@@ -7,40 +7,24 @@ const CustomerList = ({setAuth}) => {
 
     const [isActive,setActive] = useState("customerlist");
 
-    const [inputs, setInputs] = useState({
-        fn: "",
-        ln: "",
-        ph: "",
-        un: "",
-        ps: "",
-        hs: "",
-        str: "",
-        pin: "",
-        dist: "",
-      });
+    const [data, setData] = useState([]);
 
-      const {fn,ln,un,ph,ps,hs,str,pin,dist} = inputs;
-    
-      const onChange = (e) => {
-          setInputs({...inputs,[e.target.name] : e.target.value});
-      }
+    async function getCustDetails() {
 
-    async function getName() {
         try {
-
-            const response = await fetch("http://localhost:5000/dashboard/", {
+            
+            const response = await fetch("http://localhost:5000/dashboard/custdetails", {
                 method: "GET",
                 headers: {token: localStorage.token}
             });
 
             const parseRes = await response.json();
 
-            // console.log(parseRes);
+            setData(parseRes);
 
-            setInputs({...inputs, fn: parseRes.c_fname,
-                ln: parseRes.c_lname, ph: parseRes.c_phno, hs: parseRes.c_house,
-                str: parseRes.c_street, pin: parseRes.c_pin, dist: parseRes.c_dist, un: parseRes.username})
-            
+            // console.log(parseRes.token);
+
+
         } catch (err) {
 
             console.error(err.message);
@@ -48,17 +32,22 @@ const CustomerList = ({setAuth}) => {
         }
     }
 
+    function formatDate(stringDate){
+        var date=new Date(stringDate);
+        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
+    }
+
     useEffect(() => {
-        getName();
+        getCustDetails();
     }, [0]);
 
     return (
         <Fragment>
             <div className="d-flex">
                 <Sidebar setAuth={setAuth} isActive={isActive} />
-                <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
+                <div className="pad1 col-lg-9 col-md-9 col-sm-9 mx-auto">
                     <h1 className="mb-5 text-center">Customer Details</h1>
-                    <Table bordered hover responsive>
+                    <Table bordered hover responsive className="wide">
                         <thead>
                             <tr>
                             <th>Sl. No.</th>
@@ -75,32 +64,24 @@ const CustomerList = ({setAuth}) => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <td>1</td>
-                            <td>Jerin</td>
-                            <td>Bhai</td>
-                            <td>bhai@email.com</td>
-                            <td>1234567890</td>
-                            <td>valo</td>
-                            <td>jett</td>
-                            <td>ekm</td>
-                            <td>682028</td>
-                            <td>2022-02-15</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
-                            <tr>
-                            <td>2</td>
-                            <td>George</td>
-                            <td>Clifford</td>
-                            <td>grg@email.com</td>
-                            <td>8089966348</td>
-                            <td>Nambiaparambil</td>
-                            <td>Sreekala Road</td>
-                            <td>Ernakulam</td>
-                            <td>682028</td>
-                            <td>2022-02-17</td>
-                            <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                            </tr>
+                        {
+                            data.map((item, index) => ( // access directly from array
+                                
+                                <tr key={item.cust_id}>
+                                    <th scope="row">{index+1}</th>
+                                    <td>{item.c_fname}</td>
+                                    <td>{item.c_lname}</td>
+                                    <td>{item.username}</td>
+                                    <td>{item.c_phno}</td>
+                                    <td>{item.c_house}</td>
+                                    <td>{item.c_street}</td>
+                                    <td>{item.c_dist}</td>
+                                    <td>{item.c_pin}</td>
+                                    <td>{formatDate(item.c_date)}</td>
+                                    <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
+                                </tr>
+                                ))
+                        }
                         </tbody>
                     </Table>
                 </div>

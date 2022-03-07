@@ -124,13 +124,12 @@ const CustomerCards = ({setAuth}) => {
                 <Sidebar setAuth={setAuth} isActive={isActive} />
                 <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
                     <h1 className="mb-3 text-center">Cards</h1>
-                    {/* <p className="mt-5 text-center text-muted">No Cards Yet!</p> */}
                     
                     <div className="d-flex justify-content-end">
                         <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newcard">New Card</button>
                     </div>
 
-                    <Table bordered hover responsive>
+                    <Table bordered hover responsive >
                         
                         <thead>
                             <tr>
@@ -145,7 +144,7 @@ const CustomerCards = ({setAuth}) => {
                         </thead>
                         <tbody>
                         {
-                            data.map((item, index) => ( // access directly from array
+                            data.map((item, index) => (
                                 
                                 <tr key={item.card_id}>
                                     <th scope="row">{index+1}</th>
@@ -154,7 +153,7 @@ const CustomerCards = ({setAuth}) => {
                                     <td>{item.bank_name}</td>
                                     <td>{item.card_type}</td>
                                     <td>{formatDate(item.exp_date)}</td>
-                                    <td><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
+                                    <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
                                 </tr>
                                 ))
                         }

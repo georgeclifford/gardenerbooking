@@ -90,6 +90,37 @@ const Dashboard = ({setAuth}) => {
         }
     }
 
+    const [data, setData] = useState([]);
+
+    async function getStaffDetails() {
+
+        try {
+            
+            const response = await fetch("http://localhost:5000/dashboard/staffdetails", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await response.json();
+
+            setData(parseRes);
+
+            // console.log(parseRes.token);
+
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
+    function formatDate(stringDate){
+        var date=new Date(stringDate);
+        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
+    }
+
+
     const onSubmitForm = async(e) => {
 
         try {
@@ -241,6 +272,7 @@ const Dashboard = ({setAuth}) => {
 
     useEffect(() => {
         getDetails();
+        getStaffDetails();
     }, [0]);
 
     return (
@@ -251,7 +283,7 @@ const Dashboard = ({setAuth}) => {
                 {
                     user_type === "admin" ?
 
-                            <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
+                            <div className="pad1 col-lg-9 col-md-9 col-sm-9 mx-auto">
                             
                                 <h1 className="mb-5 text-center">Staff Details</h1>
 
@@ -259,7 +291,7 @@ const Dashboard = ({setAuth}) => {
                                     <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newstaff">New Staff</button>
                                 </div>
 
-                                <Table bordered hover responsive>
+                                <Table bordered hover responsive className="wide">
                                     <thead>
                                         <tr>
                                         <th>Sl. No.</th>
@@ -276,19 +308,27 @@ const Dashboard = ({setAuth}) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                        <td>1</td>
-                                        <td>James</td>
-                                        <td>Hendrix</td>
-                                        <td>jimi@ug.com</td>
-                                        <td>8880069420</td>
-                                        <td>Rock</td>
-                                        <td>Experienced</td>
-                                        <td>Seattle</td>
-                                        <td>694200</td>
-                                        <td>2022-03-01</td>
-                                        <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
-                                        </tr>
+                                    {
+                                        data.map((item, index) => ( // access directly from array
+                                            
+                                            <tr key={item.staff_id}>
+                                                <th scope="row">{index+1}</th>
+                                                <td>{item.s_fname}</td>
+                                                <td>{item.s_lname}</td>
+                                                <td>{item.username}</td>
+                                                <td>{item.s_phno}</td>
+                                                <td>{item.s_house}</td>
+                                                <td>{item.s_street}</td>
+                                                <td>{item.s_dist}</td>
+                                                <td>{item.s_pin}</td>
+                                                <td>{formatDate(item.s_date)}</td>
+                                                <td className="text-center d-flex">
+                                                    <button className="btn btn-sm btn-outline-success">Edit</button>
+                                                    <button className="btn btn-sm btn-outline-danger mx-1">Deactivate</button>
+                                                </td>
+                                            </tr>
+                                            ))
+                                    }
                                     </tbody>
                                 </Table>
 
