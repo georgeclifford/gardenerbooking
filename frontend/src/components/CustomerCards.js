@@ -3,6 +3,9 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
+import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
+
 const CustomerCards = ({setAuth}) => {
 
     const [isActive,setActive] = useState("cards");
@@ -113,6 +116,46 @@ const CustomerCards = ({setAuth}) => {
         }
     }
 
+    async function onDeac(item_id){
+
+        try {
+
+            let card_id = "";
+
+            card_id = item_id;
+
+            const body = {card_id};
+            
+            const response = await fetch("http://localhost:5000/dashboard/deactivatecard",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes.token);
+
+            if(parseRes === true) {
+
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+
+            } else {
+
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     useEffect(() => {
         getDetails();
         getCardDetails();
@@ -129,9 +172,8 @@ const CustomerCards = ({setAuth}) => {
                         <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newcard">New Card</button>
                     </div>
 
-                    <Table bordered hover responsive >
-                        
-                        <thead>
+                    <Table hover responsive className="styled-table">
+                        <thead className="bg-dark text-white">
                             <tr>
                             <th>Sl. No.</th>
                             <th>Card Number</th>
@@ -153,7 +195,12 @@ const CustomerCards = ({setAuth}) => {
                                     <td>{item.bank_name}</td>
                                     <td>{item.card_type}</td>
                                     <td>{formatDate(item.exp_date)}</td>
-                                    <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
+                                    {
+                                        item.card_status === "active"?
+                                        <td><button className="btn btn-sm btn-danger" onClick={() => onDeac(item.card_id)} title="Deactivate"><Stop className="mt-n1" /></button></td>
+                                        :
+                                        <td><button className="btn btn-sm btn-success" onClick={() => onDeac(item.card_id)} title="Activate"><Activate className="mt-n1" /></button></td>
+                                    }
                                 </tr>
                                 ))
                         }

@@ -3,6 +3,9 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
+import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
+
 const Specializations = ({setAuth}) => {
 
     const [isActive,setActive] = useState("specializations");
@@ -69,8 +72,6 @@ const Specializations = ({setAuth}) => {
 
     const onSubmitForm = async(e) => {
 
-        e.preventDefault();
-
         try {
 
             const body = {cat_id};
@@ -105,6 +106,46 @@ const Specializations = ({setAuth}) => {
         }
     }
 
+    async function onDeac(item_id){
+
+        try {
+
+            let sc_id = "";
+
+            sc_id = item_id;
+
+            const body = {sc_id};
+            
+            const response = await fetch("http://localhost:5000/dashboard/deactivatespec",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes.token);
+
+            if(parseRes === true) {
+
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+
+            } else {
+
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     useEffect(() => {
         getCategoryDetails();
         getSpecDetails();
@@ -117,10 +158,10 @@ const Specializations = ({setAuth}) => {
                 <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
                     <h1 className="mb-3 text-center">Specializations</h1>
                     <div className="d-flex justify-content-end">
-                        <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newspec">New Specialization</button>
+                        <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newspec">Add Specialization</button>
                     </div>
-                    <Table bordered hover responsive >
-                        <thead>
+                    <Table hover responsive className="styled-table">
+                        <thead className="bg-dark text-white">
                             <tr>
                             <th>Sl. No.</th>
                             <th>Specialization ID</th>
@@ -136,9 +177,12 @@ const Specializations = ({setAuth}) => {
                                     <th scope="row">{index+1}</th>
                                     <td>{item.sc_id}</td>
                                     <td>{item.cat_name}</td>
-                                    <td className="text-center d-flex">
-                                        <button className="btn btn-sm btn-outline-danger mx-1">Deactivate</button>
-                                    </td>
+                                    {
+                                        item.sc_status === "active"?
+                                        <td><button className="btn btn-sm btn-danger" onClick={() => onDeac(item.sc_id)} title="Deactivate"><Stop className="mt-n1" /></button></td>
+                                        :
+                                        <td><button className="btn btn-sm btn-success" onClick={() => onDeac(item.sc_id)} title="Activate"><Activate className="mt-n1" /></button></td>
+                                    }
                                 </tr>
                                 ))
                         }
@@ -151,7 +195,7 @@ const Specializations = ({setAuth}) => {
 
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title" id="staticBackdropLabel">New Specialization</h5>
+                                <h5 className="modal-title" id="staticBackdropLabel">Add Specialization</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" ></button>
                             </div>
 

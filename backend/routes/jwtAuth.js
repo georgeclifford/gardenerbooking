@@ -63,7 +63,7 @@ router.post("/login", validInfo, async (req, res) => {
         //2. check if user doesnt exist (if not then we throw error)
         const user = await pool.query("SELECT * FROM tbl_login WHERE username = $1 AND l_status='active'", [username]);
         if(user.rows.length === 0){
-            return res.status(401).json("Incorrect Password or Email!");
+            return res.status(401).json("Incorrect Email or Password!");
         }
 
         //3. check if the incomming password is the same as the database password
@@ -72,7 +72,7 @@ router.post("/login", validInfo, async (req, res) => {
         //console.log(validpassword);
 
         if(!validPassword){
-            return res.status(401).json("Incorrect Password or Email!");
+            return res.status(401).json("Incorrect Email or Password!");
         }
 
         //4. give them the jwt token

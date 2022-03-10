@@ -14,7 +14,7 @@ return (
 
                     <div className="col-md mt-3">
                         <h5 className="font-weight-bold">Urban Gardener</h5>
-                        <p>An online gardener booking<br/>website since 2021.<br/>With over 1000+ Gardeners.</p>
+                        <p>An online gardener booking<br/>website since 2021.<br/>With over 100+ Gardeners.</p>
                     </div>
 
                     <div className="col-md mt-3">

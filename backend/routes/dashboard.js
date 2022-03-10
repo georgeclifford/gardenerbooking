@@ -18,25 +18,25 @@ router.get("/", authorization, async(req, res) => {
 
             const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
             
-            res.json(user.rows[0]);
+            return res.json(user.rows[0]);
         }
 
         else if(login.rows[0].user_type === "admin"){
 
-            res.json(login.rows[0]);
+            return res.json(login.rows[0]);
         }
 
         else if(login.rows[0].user_type === "staff"){
 
             const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
             
-            res.json(user.rows[0]);
+            return res.json(user.rows[0]);
         }
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -44,15 +44,15 @@ router.get("/", authorization, async(req, res) => {
 router.get("/custdetails", authorization, async(req, res) => {
     try {
 
-        const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = l.user_id");
+        const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = l.user_id ORDER BY l.user_id");
 
-        res.json(user.rows);
+        return res.json(user.rows);
         
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -60,15 +60,15 @@ router.get("/custdetails", authorization, async(req, res) => {
 router.get("/staffdetails", authorization, async(req, res) => {
     try {
 
-        const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = l.user_id");
+        const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = l.user_id ORDER BY l.user_id");
 
-        res.json(user.rows);
+        return res.json(user.rows);
         
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -82,14 +82,14 @@ router.get("/carddetails", authorization, async(req, res) => {
 
         const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
 
-        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1", [cust.rows[0].cust_id]);
+        const cards = await pool.query("SELECT * FROM tbl_card WHERE cust_id = $1 ORDER BY card_id", [cust.rows[0].cust_id]);
 
-        res.json(cards.rows);
+        return res.json(cards.rows);
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -97,15 +97,15 @@ router.get("/carddetails", authorization, async(req, res) => {
 router.get("/categorydetails", authorization, async(req, res) => {
     try {
 
-        const cat = await pool.query("SELECT * FROM tbl_category");
+        const cat = await pool.query("SELECT * FROM tbl_category ORDER BY cat_id");
 
-        res.json(cat.rows);
+        return res.json(cat.rows);
         
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -121,15 +121,15 @@ router.get("/specdetails", authorization, async(req, res) => {
 
         staff_id = staff.rows[0].staff_id;
 
-        const spec = await pool.query("SELECT * FROM tbl_specchild s, tbl_category c WHERE s.sm_id IN ( SELECT sm_id FROM tbl_specmaster WHERE staff_id = $1) AND s.cat_id=c.cat_id", [staff_id]);
+        const spec = await pool.query("SELECT * FROM tbl_specchild s, tbl_category c WHERE s.sm_id IN ( SELECT sm_id FROM tbl_specmaster WHERE staff_id = $1) AND s.cat_id=c.cat_id ORDER BY s.sc_id", [staff_id]);
 
-        res.json(spec.rows);
+        return res.json(spec.rows);
         
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -152,7 +152,7 @@ router.post("/update", authorization, async(req, res) => {
 
             const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
 
-            res.json(user.rows[0]);
+            return res.json(user.rows[0]);
         }
 
         else if(user_type === "staff"){
@@ -166,14 +166,14 @@ router.post("/update", authorization, async(req, res) => {
 
             const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
 
-            res.json(user.rows[0]);
+            return res.json(user.rows[0]);
 
         }
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -214,7 +214,7 @@ router.post("/changepassword", authorization, async(req, res) => {
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -229,8 +229,6 @@ router.post("/deactivate", authorization, async(req, res) => {
         //3. check if the incomming password is the same as the database password
         const validPassword = await bcrypt.compare(password, log.rows[0].password);
 
-        
-
         if(!validPassword){
             return res.status(401).json("Incorrect Password!");
         }
@@ -244,17 +242,162 @@ router.post("/deactivate", authorization, async(req, res) => {
             return res.status(401).json("Couldn't Deactivate Account!");
         }
         
-        res.json(true);
+        return res.json(true);
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
 
-//add
+router.post("/deactivatespec", authorization, async(req, res) => {
+    try {
+
+        const {sc_id} = req.body;
+
+        const spec = await pool.query("SELECT * FROM tbl_specchild WHERE sc_id = $1", [sc_id]);        
+
+        if(spec.rows[0].sc_status === 'active'){
+
+            const updatespec = await pool.query("UPDATE tbl_specchild SET sc_status='inactive' WHERE sc_id=$1 RETURNING *",
+            [sc_id]);    
+        }
+
+        else if(spec.rows[0].sc_status === "inactive"){
+
+            const updatespec = await pool.query("UPDATE tbl_specchild SET sc_status='active' WHERE sc_id=$1 RETURNING *",
+            [sc_id]);    
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/deactivatecard", authorization, async(req, res) => {
+    try {
+
+        const {card_id} = req.body;
+
+        const card = await pool.query("SELECT * FROM tbl_card WHERE card_id = $1", [card_id]);        
+
+        if(card.rows[0].card_status === 'active'){
+
+            const updatecard = await pool.query("UPDATE tbl_card SET card_status='inactive' WHERE card_id=$1 RETURNING *",
+            [card_id]);    
+        }
+
+        else if(card.rows[0].card_status === "inactive"){
+
+            const updatecard = await pool.query("UPDATE tbl_card SET card_status='active' WHERE card_id=$1 RETURNING *",
+            [card_id]);    
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/deactivatestaff", authorization, async(req, res) => {
+    try {
+
+        const {user_id} = req.body;
+
+        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);        
+
+        if(log.rows[0].l_status === 'active'){
+
+            const updatelog = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
+            [user_id]);    
+        }
+
+        else if(log.rows[0].l_status === "inactive"){
+
+            const updatelog = await pool.query("UPDATE tbl_login SET l_status='active' WHERE user_id=$1 RETURNING *",
+            [user_id]);
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/deactivatecust", authorization, async(req, res) => {
+    try {
+
+        const {user_id} = req.body;
+
+        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);        
+
+        if(log.rows[0].l_status === 'active'){
+
+            const updatelog = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
+            [user_id]);    
+        }
+
+        else if(log.rows[0].l_status === "inactive"){
+
+            const updatelog = await pool.query("UPDATE tbl_login SET l_status='active' WHERE user_id=$1 RETURNING *",
+            [user_id]);
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/deactivatecategory", authorization, async(req, res) => {
+    try {
+
+        const {cat_id} = req.body;
+
+        const category = await pool.query("SELECT * FROM tbl_category WHERE cat_id = $1", [cat_id]);        
+
+        if(category.rows[0].cat_status === 'active'){
+
+            const updatecategory = await pool.query("UPDATE tbl_category SET cat_status='inactive' WHERE cat_id=$1 RETURNING *",
+            [cat_id]);    
+        }
+
+        else if(category.rows[0].cat_status === "inactive"){
+
+            const updatecategory = await pool.query("UPDATE tbl_category SET cat_status='active' WHERE cat_id=$1 RETURNING *",
+            [cat_id]);
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+        // add
 
 router.post("/newcard", authorization, async(req, res) => {
     try {
@@ -268,12 +411,12 @@ router.post("/newcard", authorization, async(req, res) => {
             return res.status(401).json("Couldn't Add Card!");
         }
 
-        res.json(true);
+        return res.json(true);
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -313,12 +456,12 @@ router.post("/addstaff", authorization, async(req, res) => {
             return res.status(401).json("Couldn't Add Staff!");
         }
 
-        res.json(true);
+        return res.json(true);
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -335,12 +478,12 @@ router.post("/newcategory", authorization, async(req, res) => {
             return res.status(401).json("Couldn't Add Category!");
         }
 
-        res.json(true);
+        return res.json(true);
 
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });
@@ -413,7 +556,7 @@ router.post("/newspec", authorization, async(req, res) => {
                     return res.status(401).json("Action Failed!");
                 }
                 
-                res.json(true);
+                return res.json(true);
             }
 
             else {
@@ -425,7 +568,7 @@ router.post("/newspec", authorization, async(req, res) => {
     } catch (err) {
 
         console.error(err.message);
-        res.status(500).json("Server Error!");
+        return res.status(500).json("Server Error!");
         
     }
 });

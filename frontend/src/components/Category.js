@@ -3,6 +3,10 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
+import { ReactComponent as Edit} from "bootstrap-icons/icons/pencil-fill.svg";
+import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
+
 const Category = ({setAuth}) => {
 
     const [isActive,setActive] = useState("category");
@@ -82,6 +86,46 @@ const Category = ({setAuth}) => {
         }
     }
 
+    async function onDeac(item_id){
+
+        try {
+
+            let cat_id = "";
+
+            cat_id = item_id;
+
+            const body = {cat_id};
+            
+            const response = await fetch("http://localhost:5000/dashboard/deactivatecategory",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes.token);
+
+            if(parseRes === true) {
+
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+
+            } else {
+
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     useEffect(() => {
         getCategoryDetails();
     }, [0]);
@@ -93,16 +137,16 @@ const Category = ({setAuth}) => {
                 <div className="pad1 col-lg-9 col-md-9 col-sm-9 mx-auto">
                     <h1 className="mb-3 text-center">Category Details</h1>
                     <div className="d-flex justify-content-end">
-                        <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newstaff">New Category</button>
+                        <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newcat">New Category</button>
                     </div>
-                    <Table bordered hover responsive >
-                        <thead>
+                    <Table hover responsive className="styled-table">
+                        <thead className="bg-dark text-white">
                             <tr>
                             <th>Sl. No.</th>
                             <th>Category Name</th>
                             <th>Description</th>
                             <th>Price/Hr.</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -114,10 +158,18 @@ const Category = ({setAuth}) => {
                                     <td>{item.cat_name}</td>
                                     <td>{item.cat_desc}</td>
                                     <td>{item.cat_price}</td>
-                                    <td className="text-center d-flex">
-                                        <button className="btn btn-sm btn-outline-success">Edit</button>
-                                        <button className="btn btn-sm btn-outline-danger mx-1">Deactivate</button>
-                                    </td>
+                                    {
+                                        item.cat_status === "active"?
+                                        <td>
+                                            <button className="btn btn-sm btn-primary" title="Edit"><Edit className="mt-n1" /></button>
+                                            <button className="btn btn-sm btn-danger mx-1" onClick={() => onDeac(item.cat_id)} title="Deactivate"><Stop className="mt-n1" /></button>
+                                        </td>
+                                        :
+                                        <td>
+                                            <button className="btn btn-sm btn-primary" title="Edit"><Edit className="mt-n1" /></button>
+                                            <button className="btn btn-sm btn-success mx-1" onClick={() => onDeac(item.cat_id)} title="Activate"><Activate className="mt-n1" /></button>
+                                        </td>
+                                    }
                                 </tr>
                                 ))
                         }
@@ -125,7 +177,7 @@ const Category = ({setAuth}) => {
                     </Table>
 
                     {/* New Category Modal */}
-                    <div className="modal fade" id="newstaff" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
+                    <div className="modal fade" id="newcat" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
                         <div className="modal-dialog modal-dialog-centered modal-lg">
 
                         <div className="modal-content">
@@ -160,6 +212,7 @@ const Category = ({setAuth}) => {
                         </div>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </Fragment>

@@ -3,6 +3,11 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+import { ReactComponent as Check} from "bootstrap-icons/icons/patch-check-fill.svg";
+import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
+import { ReactComponent as Edit} from "bootstrap-icons/icons/pencil-fill.svg";
+import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
+
 const Dashboard = ({setAuth}) => {
 
     const [isActive,setActive] = useState("dashboard");
@@ -270,6 +275,46 @@ const Dashboard = ({setAuth}) => {
         }
     }
 
+    async function onDeac(item_id){
+
+        try {
+
+            let user_id = "";
+
+            user_id = item_id;
+
+            const body = {user_id};
+            
+            const response = await fetch("http://localhost:5000/dashboard/deactivatestaff",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes.token);
+
+            if(parseRes === true) {
+
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+
+            } else {
+
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     useEffect(() => {
         getDetails();
         getStaffDetails();
@@ -285,14 +330,14 @@ const Dashboard = ({setAuth}) => {
 
                             <div className="pad1 col-lg-9 col-md-9 col-sm-9 mx-auto">
                             
-                                <h1 className="mb-5 text-center">Staff Details</h1>
+                                <h1 className="mb-3 text-center">Staff Details</h1>
 
                                 <div className="d-flex justify-content-end">
                                     <button className="btn btn-sm btn-outline-dark mb-3" data-bs-toggle="modal" data-bs-target="#newstaff">New Staff</button>
                                 </div>
 
-                                <Table bordered hover responsive className="wide">
-                                    <thead>
+                                <Table hover responsive className="styled-table">
+                                    <thead className="bg-dark text-white">
                                         <tr>
                                         <th>Sl. No.</th>
                                         <th>First Name</th>
@@ -304,7 +349,7 @@ const Dashboard = ({setAuth}) => {
                                         <th>District</th>
                                         <th>Pin Code</th>
                                         <th>Date Of Joining</th>
-                                        <th>Action</th>
+                                        <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -322,10 +367,20 @@ const Dashboard = ({setAuth}) => {
                                                 <td>{item.s_dist}</td>
                                                 <td>{item.s_pin}</td>
                                                 <td>{formatDate(item.s_date)}</td>
-                                                <td className="text-center d-flex">
-                                                    <button className="btn btn-sm btn-outline-success">Edit</button>
-                                                    <button className="btn btn-sm btn-outline-danger mx-1">Deactivate</button>
-                                                </td>
+                                                {
+                                                    item.l_status === "active"?
+                                                    <td>
+                                                        <button className="btn btn-sm btn-warning " title="Specializations"><Check className="mt-n1" /></button>
+                                                        <button className="btn btn-sm btn-primary mx-1" title="Edit"><Edit className="mt-n1" /></button>
+                                                        <button className="btn btn-sm btn-danger" onClick={() => onDeac(item.user_id)} title="Deactivate"><Stop className="mt-n1" /></button>
+                                                    </td>
+                                                    :
+                                                    <td>
+                                                        <button className="btn btn-sm btn-warning" title="Specializations"><Check className="mt-n1" /></button>
+                                                        <button className="btn btn-sm btn-primary mx-1" title="Edit"><Edit className="mt-n1" /></button>
+                                                        <button className="btn btn-sm btn-success" onClick={() => onDeac(item.user_id)} title="Activate"><Activate className="mt-n1" /></button>
+                                                    </td>
+                                                }
                                             </tr>
                                             ))
                                     }

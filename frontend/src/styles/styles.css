@@ -20,7 +20,7 @@
 }
 
 .sidebutton:hover {
-  background-color: rgb(100, 100, 100) !important;
+  background-color: rgb(70, 70, 70) !important;
 }
 
 .mt-n1 {
@@ -29,4 +29,12 @@
 
 .wide {
   width: max-content !important;
+}
+
+.styled-table {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table tbody tr:last-of-type {
+  border-bottom: 2px solid #262626;
 }

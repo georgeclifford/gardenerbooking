@@ -58,9 +58,6 @@ const Reports = ({setAuth}) => {
                 <div className="pad1 col-lg-7 col-md-7 col-sm-7 mx-auto">
                     <h1 className="mb-5 text-center">Reports</h1>
                     <p className="mt-5 text-center text-muted">No Reports Yet!</p>
-                    {/* <form className="row px-5">
-
-                    </form> */}
                 </div>
             </div>
         </Fragment>

@@ -3,6 +3,9 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
+import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
+
 const CustomerList = ({setAuth}) => {
 
     const [isActive,setActive] = useState("customerlist");
@@ -37,6 +40,46 @@ const CustomerList = ({setAuth}) => {
         return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
     }
 
+    async function onDeac(item_id){
+
+        try {
+
+            let user_id = "";
+
+            user_id = item_id;
+
+            const body = {user_id};
+            
+            const response = await fetch("http://localhost:5000/dashboard/deactivatestaff",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes.token);
+
+            if(parseRes === true) {
+
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+
+            } else {
+
+                toast.error(parseRes,{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     useEffect(() => {
         getCustDetails();
     }, [0]);
@@ -47,19 +90,19 @@ const CustomerList = ({setAuth}) => {
                 <Sidebar setAuth={setAuth} isActive={isActive} />
                 <div className="pad1 col-lg-9 col-md-9 col-sm-9 mx-auto">
                     <h1 className="mb-5 text-center">Customer Details</h1>
-                    <Table bordered hover responsive className="wide">
-                        <thead>
+                    <Table hover responsive className="styled-table">
+                        <thead className="bg-dark text-white">
                             <tr>
                             <th>Sl. No.</th>
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Email</th>
-                            <th>Phone Number</th>
+                            <th>Phone No.</th>
                             <th>House</th>
                             <th>Street</th>
                             <th>District</th>
                             <th>Pin Code</th>
-                            <th>Date Of Registration</th>
+                            <th>Date Of Reg</th>
                             <th>Action</th>
                             </tr>
                         </thead>
@@ -78,7 +121,12 @@ const CustomerList = ({setAuth}) => {
                                     <td>{item.c_dist}</td>
                                     <td>{item.c_pin}</td>
                                     <td>{formatDate(item.c_date)}</td>
-                                    <td className="text-center"><button className="btn btn-sm btn-outline-danger">Deactivate</button></td>
+                                    {
+                                        item.l_status === "active"?
+                                        <td><button className="btn btn-sm btn-danger" onClick={() => onDeac(item.user_id)} title="Deactivate"><Stop className="mt-n1" /></button></td>
+                                        :
+                                        <td><button className="btn btn-sm btn-success" onClick={() => onDeac(item.user_id)} title="Activate"><Activate className="mt-n1" /></button></td>
+                                    }
                                 </tr>
                                 ))
                         }
