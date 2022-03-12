@@ -6,6 +6,7 @@ const Navbar = (props) => {
     const isLoggedin = props.isLoggedin;
     const [fname,setFName] = useState("");
     const [lname,setLName] = useState("");
+    const [data, setData] = useState([]);
 
     async function getName() {
         try {
@@ -44,9 +45,33 @@ const Navbar = (props) => {
         }
     }
 
+    async function getCategoryDetails() {
+
+        try {
+            
+            const response = await fetch("http://localhost:5000/dashboard/categorydisplay", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await response.json();
+
+            setData(parseRes);
+
+            // console.log(parseRes.token);
+
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     useEffect(() => {
         getName();
-    });
+        getCategoryDetails();
+    }, [0]);
 
     function LoginButton() {
 
@@ -61,26 +86,41 @@ const Navbar = (props) => {
         <Fragment>
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
                 <div className="container-fluid my-2">
+
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarTogglerDemo03">
                         <span className="navbar-toggler-icon"></span>
                     </button>
+
                     <a className="navbar-brand" href="http://localhost:3000">Urban Gardener</a>
+
                     <div className="collapse navbar-collapse mx-3" id="navbarTogglerDemo03">
-                        <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Balcony Gardener</a>
+
+                        <ul className="navbar-nav me-auto mb-2 mx-3 gap-3 mb-lg-0">
+                            <li className="nav-item dropdown">
+                                <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Categories
+                                </a>
+
+                                <ul className="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
+
+                                    {
+                                        data.map((item, index) => (
+
+                                            <li key={item.cat_id}><a className="dropdown-item" href="#">{item.cat_name}</a></li>
+
+                                        ))
+                                    }
+
+                                </ul>
+
                             </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Flower Gardener</a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="#">Vegetable Gardener</a>
-                            </li>
+
                             <li className="nav-item">
                                 <a className="nav-link" href="#">About Us</a>
                             </li>
-                        </ul>
+                            
+                        </ul> 
                         <div className="d-flex">
                             <LoginButton />
                         </div>

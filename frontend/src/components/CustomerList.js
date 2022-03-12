@@ -40,13 +40,9 @@ const CustomerList = ({setAuth}) => {
         return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
     }
 
-    async function onDeac(item_id){
+    async function onDeac(user_id){
 
         try {
-
-            let user_id = "";
-
-            user_id = item_id;
 
             const body = {user_id};
             
@@ -108,7 +104,7 @@ const CustomerList = ({setAuth}) => {
                         </thead>
                         <tbody>
                         {
-                            data.map((item, index) => ( // access directly from array
+                            data.map((item, index) => (
                                 
                                 <tr key={item.cust_id}>
                                     <th scope="row">{index+1}</th>

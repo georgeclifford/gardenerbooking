@@ -26,7 +26,7 @@ const Specializations = ({setAuth}) => {
 
         try {
             
-            const response = await fetch("http://localhost:5000/dashboard/categorydetails", {
+            const response = await fetch("http://localhost:5000/dashboard/categorydisplay", {
                 method: "GET",
                 headers: {token: localStorage.token}
             });
@@ -72,6 +72,8 @@ const Specializations = ({setAuth}) => {
 
     const onSubmitForm = async(e) => {
 
+        e.preventDefault();
+
         try {
 
             const body = {cat_id};
@@ -106,13 +108,9 @@ const Specializations = ({setAuth}) => {
         }
     }
 
-    async function onDeac(item_id){
+    async function onDeac(sc_id){
 
         try {
-
-            let sc_id = "";
-
-            sc_id = item_id;
 
             const body = {sc_id};
             
@@ -189,38 +187,40 @@ const Specializations = ({setAuth}) => {
                         </tbody>
                     </Table>
 
-                    {/* New Category Modal */}
+                    {/* New Spec Modal */}
                     <div className="modal fade" id="newspec" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
                         <div className="modal-dialog modal-dialog-centered modal-lg">
 
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="staticBackdropLabel">Add Specialization</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" ></button>
-                            </div>
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="staticBackdropLabel">Add Specialization</h5>
+                                    <button type="button" className="btn-close" data-bs-dismiss="modal" ></button>
+                                </div>
 
-                            <form onSubmit={onSubmitForm} className=" row g-3 needs-validation">
-                                <div className="modal-body d-flex flex-column align-items-center">
+                                <form onSubmit={onSubmitForm} className=" row g-3 needs-validation">
+                                    <div className="modal-body d-flex flex-column align-items-center">
 
-                                    <div className=" col-md-8 mb-3">
-                                        <label  className="form-label">Choose Category</label>
-                                        <select className="form-select" name="cat_id" onChange={e => onChange(e)} id="inputGroupSelect01" required>
-                                            <option selected hidden disabled>Choose...</option>
-                                            {
-                                                cat.map((item, index) => (
+                                        <div className=" col-md-8 mb-3">
+                                            <label  className="form-label">Choose Category</label>
+                                            <select className="form-select" name="cat_id" onChange={e => onChange(e)} id="inputGroupSelect01" required>
+                                                <option selected hidden disabled>Choose...</option>
+                                                {
+                                                    cat.map((item, index) => (
 
-                                                    <option key={item.cat_id} value={item.cat_id}> {item.cat_name} </option>
-                                                ))
-                                            }
-                                        </select>
+                                                        <option key={item.cat_id} value={item.cat_id}> {item.cat_name} </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+
                                     </div>
+                                    <div className="modal-footer">
+                                        <button className="btn btn-dark">Add Specialization</button>
+                                    </div>
+                                </form>
 
-                                </div>
-                                <div className="modal-footer">
-                                    <button className="btn btn-dark">Add Specialization</button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            
                         </div>
                     </div>
 

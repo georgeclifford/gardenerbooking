@@ -110,6 +110,22 @@ router.get("/categorydetails", authorization, async(req, res) => {
     }
 });
 
+router.get("/categorydisplay", async(req, res) => {
+    try {
+
+        const cat = await pool.query("SELECT * FROM tbl_category WHERE cat_status='active' ORDER BY cat_name");
+
+        return res.json(cat.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 router.get("/specdetails", authorization, async(req, res) => {
     try {
 
@@ -475,6 +491,28 @@ router.post("/newcategory", authorization, async(req, res) => {
         [cat_name, cat_desc, cat_price]);
 
         if(newCategory.rows.length === 0){
+            return res.status(401).json("Couldn't Add Category!");
+        }
+
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+router.post("/editcategory", authorization, async(req, res) => {
+    try {
+
+        const {cat_id,cat_name,cat_desc,cat_price} = req.body;
+
+        const editCategory = await pool.query("UPDATE tbl_category SET cat_name=$2, cat_desc=$3, cat_price=$4 WHERE cat_id=$1 RETURNING *",
+        [cat_id, cat_name, cat_desc, cat_price]);
+
+        if(editCategory.rows.length === 0){
             return res.status(401).json("Couldn't Add Category!");
         }
 

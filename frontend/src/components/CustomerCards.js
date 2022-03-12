@@ -116,13 +116,9 @@ const CustomerCards = ({setAuth}) => {
         }
     }
 
-    async function onDeac(item_id){
+    async function onDeac(card_id){
 
         try {
-
-            let card_id = "";
-
-            card_id = item_id;
 
             const body = {card_id};
             
