@@ -23,6 +23,7 @@ const Register = ({setAuth}) => {
         setInputs({...inputs, [e.target.name] : e.target.value });
     };
 
+    // Register form submit function
     const onSubmitForm = async(e) => {
         e.preventDefault();
 
@@ -41,7 +42,7 @@ const Register = ({setAuth}) => {
             //console.log(parseRes);
 
             if(parseRes.user_id){
-                console.log(parseRes.user_id);
+
                 localStorage.setItem("user_id", parseRes.user_id)
             }
 

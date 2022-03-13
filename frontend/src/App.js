@@ -7,7 +7,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles/styles.css';
 
-//components
+
+// components
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';

@@ -19,6 +19,7 @@ const Sidebar = (props) => {
   const [lname,setLName] = useState("");
   const [user_type,setUserType] = useState("");
 
+  // Fetch Name of the user function
   async function getDetails() {
       try {
 
@@ -58,6 +59,7 @@ const Sidebar = (props) => {
       }
   }
 
+    // Logout Funtion
     const logout = (e) =>{
       e.preventDefault();
       localStorage.removeItem("token");
@@ -78,8 +80,11 @@ const Sidebar = (props) => {
                 <div className="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" >
                     <span className="fs-4">{fname} {lname}</span>
                     <hr />
+
                     {
                         user_type === "admin" ?
+
+                        // Admin Sidebar
 
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
@@ -141,6 +146,8 @@ const Sidebar = (props) => {
                         
                         : user_type === "customer" ?
 
+                        //Customer Sidebar
+
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
                                     { isActive === "dashboard" ? 
@@ -178,6 +185,8 @@ const Sidebar = (props) => {
                             </ul>
 
                         :
+
+                        // Staff Sidebar
 
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">

@@ -20,11 +20,14 @@ const CustomerCards = ({setAuth}) => {
       });
 
       const {cust_id,card_no,card_name,bank_name,card_type,exp_date,card_status} = inputs;
+
+      const [data, setData] = useState([]);
     
       const onChange = (e) => {
           setInputs({...inputs,[e.target.name] : e.target.value});
       }
 
+    // Function for fetching Customer/Staff/Admin panel details
     async function getDetails() {
         try {
 
@@ -48,8 +51,7 @@ const CustomerCards = ({setAuth}) => {
         }
     }
 
-    const [data, setData] = useState([]);
-
+    // Function for fetching card details
     async function getCardDetails() {
 
         try {
@@ -73,11 +75,7 @@ const CustomerCards = ({setAuth}) => {
         }
     }
 
-    function formatDate(stringDate){
-        var date=new Date(stringDate);
-        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
-    }
-
+    // New card addition function
     const onSubmitForm = async(e) => {
 
         e.preventDefault();
@@ -116,6 +114,7 @@ const CustomerCards = ({setAuth}) => {
         }
     }
 
+    // Card deactivation function
     async function onDeac(card_id){
 
         try {
@@ -150,6 +149,12 @@ const CustomerCards = ({setAuth}) => {
             console.error(err.message);
             
         }
+    }
+
+    // Date format function
+    function formatDate(stringDate){
+        var date=new Date(stringDate);
+        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
     }
 
     useEffect(() => {

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+//Bootstrap icon imports
 import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
 import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
 
@@ -15,6 +16,8 @@ const Specializations = ({setAuth}) => {
       });
 
       const {cat_id} = inputs;
+
+      const [spec, setSpec] = useState([]);
     
       const onChange = (e) => {
           setInputs({...inputs,[e.target.name] : e.target.value});
@@ -22,6 +25,7 @@ const Specializations = ({setAuth}) => {
 
     const [cat, setCat] = useState([]);
 
+    // Function for fetching category details
     async function getCategoryDetails() {
 
         try {
@@ -35,9 +39,6 @@ const Specializations = ({setAuth}) => {
 
             setCat(parseRes);
 
-            // console.log(parseRes.token);
-
-
         } catch (err) {
 
             console.error(err.message);
@@ -45,8 +46,7 @@ const Specializations = ({setAuth}) => {
         }
     }
 
-    const [spec, setSpec] = useState([]);
-
+    // Function for fetching specialization details
     async function getSpecDetails() {
 
         try {
@@ -70,6 +70,7 @@ const Specializations = ({setAuth}) => {
         }
     }
 
+    // New specialization addition function
     const onSubmitForm = async(e) => {
 
         e.preventDefault();
@@ -85,8 +86,6 @@ const Specializations = ({setAuth}) => {
             });
 
             const parseRes = await response.json();
-
-            // console.log(parseRes.token);
 
             if(parseRes === true) {
 
@@ -108,6 +107,7 @@ const Specializations = ({setAuth}) => {
         }
     }
 
+    // Specialization deactivation function
     async function onDeac(sc_id){
 
         try {
@@ -220,7 +220,7 @@ const Specializations = ({setAuth}) => {
                                 </form>
 
                             </div>
-                            
+
                         </div>
                     </div>
 

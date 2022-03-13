@@ -3,8 +3,9 @@ const pool = require("../db");
 const authorization = require("../middleware/authorization");
 const bcrypt = require("bcrypt");
 
-//fetch
+// DETAILS FETCHING
 
+// Fetching Customer/Staff/Admin panel details
 router.get("/", authorization, async(req, res) => {
     try {
 
@@ -41,6 +42,7 @@ router.get("/", authorization, async(req, res) => {
     }
 });
 
+// Customer details fetching
 router.get("/custdetails", authorization, async(req, res) => {
     try {
 
@@ -57,6 +59,7 @@ router.get("/custdetails", authorization, async(req, res) => {
     }
 });
 
+//Staff details fetching
 router.get("/staffdetails", authorization, async(req, res) => {
     try {
 
@@ -73,6 +76,7 @@ router.get("/staffdetails", authorization, async(req, res) => {
     }
 });
 
+// Card details fetching
 router.get("/carddetails", authorization, async(req, res) => {
     try {
 
@@ -94,6 +98,7 @@ router.get("/carddetails", authorization, async(req, res) => {
     }
 });
 
+// Category details fetching
 router.get("/categorydetails", authorization, async(req, res) => {
     try {
 
@@ -110,6 +115,7 @@ router.get("/categorydetails", authorization, async(req, res) => {
     }
 });
 
+// Category details fetching for display
 router.get("/categorydisplay", async(req, res) => {
     try {
 
@@ -126,6 +132,7 @@ router.get("/categorydisplay", async(req, res) => {
     }
 });
 
+// Specialization details fetching
 router.get("/specdetails", authorization, async(req, res) => {
     try {
 
@@ -150,293 +157,10 @@ router.get("/specdetails", authorization, async(req, res) => {
     }
 });
 
-//edit
 
-router.post("/update", authorization, async(req, res) => {
-    try {
+// NEW ADDITIONS
 
-        const {user_id,user_type,fname,lname,phno,house,street,pin,dist} = req.body;
-
-        if(user_type === "customer"){
-
-            const updatecust = await pool.query("UPDATE tbl_customer SET c_phno=$1, c_fname=$2, c_lname=$3, c_house=$4, c_street=$5, c_dist=$6, c_pin=$7 WHERE user_id=$8 RETURNING *",
-            [phno, fname, lname, house, street, dist, pin, user_id]);
-
-            if(updatecust.rows.length === 0){
-                return res.status(401).json("Updation Failed!");
-            }
-
-            const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
-
-            return res.json(user.rows[0]);
-        }
-
-        else if(user_type === "staff"){
-
-            const updatestaff = await pool.query("UPDATE tbl_staff SET s_phno=$1, s_fname=$2, s_lname=$3, s_house=$4, s_street=$5, s_dist=$6, s_pin=$7 WHERE user_id=$8 RETURNING *",
-            [phno, fname, lname, house, street, dist, pin, user_id]);
-
-            if(updatestaff.rows.length === 0){
-                return res.status(401).json("Updation Failed!");
-            }
-
-            const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
-
-            return res.json(user.rows[0]);
-
-        }
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/changepassword", authorization, async(req, res) => {
-    try {
-
-        const {user_id,password,newpassword,confirmpassword} = req.body;
-
-        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);
-
-        //3. check if the incomming password is the same as the database password
-        const validPassword = await bcrypt.compare(password, log.rows[0].password);
-
-        //console.log(validpassword);
-
-        if(!validPassword){
-            return res.status(401).json("Incorrect Password!");
-        }
-
-        if(newpassword !== confirmpassword){
-            return res.status(401).json("Password Does Not Match!");
-        }
-
-        const saltRound=10;
-        const salt = await bcrypt.genSalt(saltRound);
-        const bcryptpassword = await bcrypt.hash(newpassword, salt);
-
-        const updatepassword = await pool.query("UPDATE tbl_login SET password=$1 WHERE user_id=$2 RETURNING *",
-        [bcryptpassword, user_id]);
-
-        if(updatepassword.rows.length === 0){
-            return res.status(401).json("Couldn't Change Password!");
-        }
-
-        res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/deactivate", authorization, async(req, res) => {
-    try {
-
-        const {user_id,password} = req.body;
-
-        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);
-
-        //3. check if the incomming password is the same as the database password
-        const validPassword = await bcrypt.compare(password, log.rows[0].password);
-
-        if(!validPassword){
-            return res.status(401).json("Incorrect Password!");
-        }
-
-        const updatestatus = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
-        [user_id]);
-
-        const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id AND l.user_type='active'", [req.user.id]);
-
-        if(user.rows.length !== 0){
-            return res.status(401).json("Couldn't Deactivate Account!");
-        }
-        
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/deactivatespec", authorization, async(req, res) => {
-    try {
-
-        const {sc_id} = req.body;
-
-        const spec = await pool.query("SELECT * FROM tbl_specchild WHERE sc_id = $1", [sc_id]);        
-
-        if(spec.rows[0].sc_status === 'active'){
-
-            const updatespec = await pool.query("UPDATE tbl_specchild SET sc_status='inactive' WHERE sc_id=$1 RETURNING *",
-            [sc_id]);    
-        }
-
-        else if(spec.rows[0].sc_status === "inactive"){
-
-            const updatespec = await pool.query("UPDATE tbl_specchild SET sc_status='active' WHERE sc_id=$1 RETURNING *",
-            [sc_id]);    
-        }
-        
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/deactivatecard", authorization, async(req, res) => {
-    try {
-
-        const {card_id} = req.body;
-
-        const card = await pool.query("SELECT * FROM tbl_card WHERE card_id = $1", [card_id]);        
-
-        if(card.rows[0].card_status === 'active'){
-
-            const updatecard = await pool.query("UPDATE tbl_card SET card_status='inactive' WHERE card_id=$1 RETURNING *",
-            [card_id]);    
-        }
-
-        else if(card.rows[0].card_status === "inactive"){
-
-            const updatecard = await pool.query("UPDATE tbl_card SET card_status='active' WHERE card_id=$1 RETURNING *",
-            [card_id]);    
-        }
-        
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/deactivatestaff", authorization, async(req, res) => {
-    try {
-
-        const {user_id} = req.body;
-
-        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);        
-
-        if(log.rows[0].l_status === 'active'){
-
-            const updatelog = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
-            [user_id]);    
-        }
-
-        else if(log.rows[0].l_status === "inactive"){
-
-            const updatelog = await pool.query("UPDATE tbl_login SET l_status='active' WHERE user_id=$1 RETURNING *",
-            [user_id]);
-        }
-        
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/deactivatecust", authorization, async(req, res) => {
-    try {
-
-        const {user_id} = req.body;
-
-        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);        
-
-        if(log.rows[0].l_status === 'active'){
-
-            const updatelog = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
-            [user_id]);    
-        }
-
-        else if(log.rows[0].l_status === "inactive"){
-
-            const updatelog = await pool.query("UPDATE tbl_login SET l_status='active' WHERE user_id=$1 RETURNING *",
-            [user_id]);
-        }
-        
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-router.post("/deactivatecategory", authorization, async(req, res) => {
-    try {
-
-        const {cat_id} = req.body;
-
-        const category = await pool.query("SELECT * FROM tbl_category WHERE cat_id = $1", [cat_id]);        
-
-        if(category.rows[0].cat_status === 'active'){
-
-            const updatecategory = await pool.query("UPDATE tbl_category SET cat_status='inactive' WHERE cat_id=$1 RETURNING *",
-            [cat_id]);    
-        }
-
-        else if(category.rows[0].cat_status === "inactive"){
-
-            const updatecategory = await pool.query("UPDATE tbl_category SET cat_status='active' WHERE cat_id=$1 RETURNING *",
-            [cat_id]);
-        }
-        
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
-        // add
-
-router.post("/newcard", authorization, async(req, res) => {
-    try {
-
-        const {cust_id,card_no,card_name,bank_name,card_type,exp_date} = req.body;
-
-        const newCard = await pool.query("INSERT INTO tbl_card (cust_id, card_no, card_name, bank_name, card_type, exp_date, card_status) VALUES ($1, $2, $3, $4, $5, $6, 'active') RETURNING *",
-        [cust_id, card_no, card_name, bank_name, card_type, exp_date]);
-
-        if(newCard.rows.length === 0){
-            return res.status(401).json("Couldn't Add Card!");
-        }
-
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
+// New staff addition
 router.post("/addstaff", authorization, async(req, res) => {
     try {
 
@@ -482,6 +206,30 @@ router.post("/addstaff", authorization, async(req, res) => {
     }
 });
 
+// New card addition
+router.post("/newcard", authorization, async(req, res) => {
+    try {
+
+        const {cust_id,card_no,card_name,bank_name,card_type,exp_date} = req.body;
+
+        const newCard = await pool.query("INSERT INTO tbl_card (cust_id, card_no, card_name, bank_name, card_type, exp_date, card_status) VALUES ($1, $2, $3, $4, $5, $6, 'active') RETURNING *",
+        [cust_id, card_no, card_name, bank_name, card_type, exp_date]);
+
+        if(newCard.rows.length === 0){
+            return res.status(401).json("Couldn't Add Card!");
+        }
+
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// New category addition
 router.post("/newcategory", authorization, async(req, res) => {
     try {
 
@@ -504,28 +252,7 @@ router.post("/newcategory", authorization, async(req, res) => {
     }
 });
 
-router.post("/editcategory", authorization, async(req, res) => {
-    try {
-
-        const {cat_id,cat_name,cat_desc,cat_price} = req.body;
-
-        const editCategory = await pool.query("UPDATE tbl_category SET cat_name=$2, cat_desc=$3, cat_price=$4 WHERE cat_id=$1 RETURNING *",
-        [cat_id, cat_name, cat_desc, cat_price]);
-
-        if(editCategory.rows.length === 0){
-            return res.status(401).json("Couldn't Add Category!");
-        }
-
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
-        
-    }
-});
-
+// New specialization addition
 router.post("/newspec", authorization, async(req, res) => {
     try {
 
@@ -581,8 +308,6 @@ router.post("/newspec", authorization, async(req, res) => {
 
         sm_id = SpecMast.rows[0].sm_id;
 
-        // console.log(cat_id);
-
             const SpecChild = await pool.query("SELECT * FROM tbl_specchild WHERE sm_id = $1 AND cat_id = $2", [sm_id, cat_id]);
 
             if(SpecChild.rows.length === 0){
@@ -602,6 +327,331 @@ router.post("/newspec", authorization, async(req, res) => {
                 return res.status(401).json("Specialization Already Added!");
 
             }
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
+// EDITS/UPDATES
+
+// Customer/Staff updation
+router.post("/update", authorization, async(req, res) => {
+    try {
+
+        const {user_id,user_type,fname,lname,phno,house,street,pin,dist} = req.body;
+
+        if(user_type === "customer"){
+
+            const updatecust = await pool.query("UPDATE tbl_customer SET c_phno=$1, c_fname=$2, c_lname=$3, c_house=$4, c_street=$5, c_dist=$6, c_pin=$7 WHERE user_id=$8 RETURNING *",
+            [phno, fname, lname, house, street, dist, pin, user_id]);
+
+            if(updatecust.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
+
+            return res.json(user.rows[0]);
+        }
+
+        else if(user_type === "staff"){
+
+            const updatestaff = await pool.query("UPDATE tbl_staff SET s_phno=$1, s_fname=$2, s_lname=$3, s_house=$4, s_street=$5, s_dist=$6, s_pin=$7 WHERE user_id=$8 RETURNING *",
+            [phno, fname, lname, house, street, dist, pin, user_id]);
+
+            if(updatestaff.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
+
+            return res.json(user.rows[0]);
+
+        }
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// Staff editting for admin
+router.post("/staffedit", authorization, async(req, res) => {
+    try {
+
+        const {user_id,fname,lname,phno,house,street,pin,dist} = req.body;
+
+            const updatestaff = await pool.query("UPDATE tbl_staff SET s_phno=$1, s_fname=$2, s_lname=$3, s_house=$4, s_street=$5, s_dist=$6, s_pin=$7 WHERE user_id=$8 RETURNING *",
+            [phno, fname, lname, house, street, dist, pin, user_id]);
+
+            if(updatestaff.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// Category editting
+router.post("/editcategory", authorization, async(req, res) => {
+    try {
+
+        const {cat_id,cat_name,cat_desc,cat_price} = req.body;
+
+        const editCategory = await pool.query("UPDATE tbl_category SET cat_name=$2, cat_desc=$3, cat_price=$4 WHERE cat_id=$1 RETURNING *",
+        [cat_id, cat_name, cat_desc, cat_price]);
+
+        if(editCategory.rows.length === 0){
+            return res.status(401).json("Couldn't Add Category!");
+        }
+
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
+// PASSWORD CHANGING
+
+// User password changing
+router.post("/changepassword", authorization, async(req, res) => {
+    try {
+
+        const {user_id,password,newpassword,confirmpassword} = req.body;
+
+        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);
+
+        //3. check if the incomming password is the same as the database password
+        const validPassword = await bcrypt.compare(password, log.rows[0].password);
+
+        //console.log(validpassword);
+
+        if(!validPassword){
+            return res.status(401).json("Incorrect Password!");
+        }
+
+        if(newpassword !== confirmpassword){
+            return res.status(401).json("Password Does Not Match!");
+        }
+
+        const saltRound=10;
+        const salt = await bcrypt.genSalt(saltRound);
+        const bcryptpassword = await bcrypt.hash(newpassword, salt);
+
+        const updatepassword = await pool.query("UPDATE tbl_login SET password=$1 WHERE user_id=$2 RETURNING *",
+        [bcryptpassword, user_id]);
+
+        if(updatepassword.rows.length === 0){
+            return res.status(401).json("Couldn't Change Password!");
+        }
+
+        res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// Staff password changing for admin
+router.post("/changestaffpassword", authorization, async(req, res) => {
+    try {
+
+        const {user_id,newpassword,confirmpassword} = req.body;
+
+        if(newpassword !== confirmpassword){
+            return res.status(401).json("Password Does Not Match!");
+        }
+
+        const saltRound=10;
+        const salt = await bcrypt.genSalt(saltRound);
+        const bcryptpassword = await bcrypt.hash(newpassword, salt);
+
+        const updatepassword = await pool.query("UPDATE tbl_login SET password=$1 WHERE user_id=$2 RETURNING *",
+        [bcryptpassword, user_id]);
+
+        if(updatepassword.rows.length === 0){
+            return res.status(401).json("Couldn't Change Password!");
+        }
+
+        res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
+// DEACTIVATIONS
+
+// Customer account deactivate
+router.post("/deactivate", authorization, async(req, res) => {
+    try {
+
+        const {user_id,password} = req.body;
+
+        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);
+
+        //3. check if the incomming password is the same as the database password
+        const validPassword = await bcrypt.compare(password, log.rows[0].password);
+
+        if(!validPassword){
+            return res.status(401).json("Incorrect Password!");
+        }
+
+        const updatestatus = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
+        [user_id]);
+
+        const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id AND l.user_type='active'", [req.user.id]);
+
+        if(user.rows.length !== 0){
+            return res.status(401).json("Couldn't Deactivate Account!");
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// User deactivate for admin panel
+router.post("/deactivateuser", authorization, async(req, res) => {
+    try {
+
+        const {user_id} = req.body;
+
+        const log = await pool.query("SELECT * FROM tbl_login WHERE user_id = $1", [user_id]);        
+
+        if(log.rows[0].l_status === 'active'){
+
+            const updatelog = await pool.query("UPDATE tbl_login SET l_status='inactive' WHERE user_id=$1 RETURNING *",
+            [user_id]);    
+        }
+
+        else if(log.rows[0].l_status === "inactive"){
+
+            const updatelog = await pool.query("UPDATE tbl_login SET l_status='active' WHERE user_id=$1 RETURNING *",
+            [user_id]);
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// Specialization deactivate
+router.post("/deactivatespec", authorization, async(req, res) => {
+    try {
+
+        const {sc_id} = req.body;
+
+        const spec = await pool.query("SELECT * FROM tbl_specchild WHERE sc_id = $1", [sc_id]);        
+
+        if(spec.rows[0].sc_status === 'active'){
+
+            const updatespec = await pool.query("UPDATE tbl_specchild SET sc_status='inactive' WHERE sc_id=$1 RETURNING *",
+            [sc_id]);    
+        }
+
+        else if(spec.rows[0].sc_status === "inactive"){
+
+            const updatespec = await pool.query("UPDATE tbl_specchild SET sc_status='active' WHERE sc_id=$1 RETURNING *",
+            [sc_id]);    
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// card deactivate
+router.post("/deactivatecard", authorization, async(req, res) => {
+    try {
+
+        const {card_id} = req.body;
+
+        const card = await pool.query("SELECT * FROM tbl_card WHERE card_id = $1", [card_id]);        
+
+        if(card.rows[0].card_status === 'active'){
+
+            const updatecard = await pool.query("UPDATE tbl_card SET card_status='inactive' WHERE card_id=$1 RETURNING *",
+            [card_id]);    
+        }
+
+        else if(card.rows[0].card_status === "inactive"){
+
+            const updatecard = await pool.query("UPDATE tbl_card SET card_status='active' WHERE card_id=$1 RETURNING *",
+            [card_id]);    
+        }
+        
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// Category Deactivate
+router.post("/deactivatecategory", authorization, async(req, res) => {
+    try {
+
+        const {cat_id} = req.body;
+
+        const category = await pool.query("SELECT * FROM tbl_category WHERE cat_id = $1", [cat_id]);        
+
+        if(category.rows[0].cat_status === 'active'){
+
+            const updatecategory = await pool.query("UPDATE tbl_category SET cat_status='inactive' WHERE cat_id=$1 RETURNING *",
+            [cat_id]);    
+        }
+
+        else if(category.rows[0].cat_status === "inactive"){
+
+            const updatecategory = await pool.query("UPDATE tbl_category SET cat_status='active' WHERE cat_id=$1 RETURNING *",
+            [cat_id]);
+        }
+        
+        return res.json(true);
 
     } catch (err) {
 

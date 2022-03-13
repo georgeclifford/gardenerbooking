@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+// Bootstrap icon imports
 import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
 import { ReactComponent as Edit} from "bootstrap-icons/icons/pencil-fill.svg";
 import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
@@ -26,6 +27,7 @@ const Category = ({setAuth}) => {
 
     const [data, setData] = useState([]);
 
+    // Function for fetching category details
     async function getCategoryDetails() {
 
         try {
@@ -39,9 +41,6 @@ const Category = ({setAuth}) => {
 
             setData(parseRes);
 
-            // console.log(parseRes.token);
-
-
         } catch (err) {
 
             console.error(err.message);
@@ -49,6 +48,7 @@ const Category = ({setAuth}) => {
         }
     }
 
+    // New category addition function
     const onSubmitForm = async(e) => {
 
         e.preventDefault();
@@ -64,8 +64,6 @@ const Category = ({setAuth}) => {
             });
 
             const parseRes = await response.json();
-
-            // console.log(parseRes.token);
 
             if(parseRes === true) {
 
@@ -87,6 +85,7 @@ const Category = ({setAuth}) => {
         }
     }
 
+    // Category edit function
     const onEditForm = async(e) => {
 
         e.preventDefault();
@@ -125,6 +124,7 @@ const Category = ({setAuth}) => {
         }
     }
 
+    // Category deactivation function
     async function onDeac(cat_id){
 
         try {
@@ -161,6 +161,7 @@ const Category = ({setAuth}) => {
         }
     }
 
+    // Functon for setting caegory details on click
     function onSend (id, name, desc, price){
 
         setInputs({...inputs, 

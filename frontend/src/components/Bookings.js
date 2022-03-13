@@ -6,51 +6,6 @@ const Bookings = ({setAuth}) => {
 
     const [isActive,setActive] = useState("bookings");
 
-    const [inputs, setInputs] = useState({
-        fn: "",
-        ln: "",
-        ph: "",
-        un: "",
-        ps: "",
-        hs: "",
-        str: "",
-        pin: "",
-        dist: "",
-      });
-
-      const {fn,ln,un,ph,ps,hs,str,pin,dist} = inputs;
-    
-      const onChange = (e) => {
-          setInputs({...inputs,[e.target.name] : e.target.value});
-      }
-
-    async function getName() {
-        try {
-
-            const response = await fetch("http://localhost:5000/dashboard/", {
-                method: "GET",
-                headers: {token: localStorage.token}
-            });
-
-            const parseRes = await response.json();
-
-            // console.log(parseRes);
-
-            setInputs({...inputs, fn: parseRes.c_fname,
-                ln: parseRes.c_lname, ph: parseRes.c_phno, hs: parseRes.c_house,
-                str: parseRes.c_street, pin: parseRes.c_pin, dist: parseRes.c_dist, un: parseRes.username})
-            
-        } catch (err) {
-
-            console.error(err.message);
-            
-        }
-    }
-
-    useEffect(() => {
-        getName();
-    }, [0]);
-
     return (
         <Fragment>
             <div className="d-flex">

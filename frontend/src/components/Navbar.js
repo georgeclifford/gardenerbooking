@@ -8,6 +8,7 @@ const Navbar = (props) => {
     const [lname,setLName] = useState("");
     const [data, setData] = useState([]);
 
+    // Name fetch function
     async function getName() {
         try {
 
@@ -45,6 +46,7 @@ const Navbar = (props) => {
         }
     }
 
+    // Category fetch funtion
     async function getCategoryDetails() {
 
         try {
@@ -68,11 +70,7 @@ const Navbar = (props) => {
         }
     }
 
-    useEffect(() => {
-        getName();
-        getCategoryDetails();
-    }, [0]);
-
+    // Function for setting content for login button
     function LoginButton() {
 
         if (isLoggedin) {
@@ -81,6 +79,11 @@ const Navbar = (props) => {
 
         return <Link to="/login" className="btn btn-outline-light btn-sm">Login</Link>
     }
+
+    useEffect(() => {
+        getName();
+        getCategoryDetails();
+    }, [0]);
 
     return (
         <Fragment>

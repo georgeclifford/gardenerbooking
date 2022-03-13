@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+//Bootstrap icon imports
 import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
 import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
 
@@ -12,6 +13,7 @@ const CustomerList = ({setAuth}) => {
 
     const [data, setData] = useState([]);
 
+    // Function for fetching Customer details
     async function getCustDetails() {
 
         try {
@@ -25,9 +27,6 @@ const CustomerList = ({setAuth}) => {
 
             setData(parseRes);
 
-            // console.log(parseRes.token);
-
-
         } catch (err) {
 
             console.error(err.message);
@@ -35,26 +34,20 @@ const CustomerList = ({setAuth}) => {
         }
     }
 
-    function formatDate(stringDate){
-        var date=new Date(stringDate);
-        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
-    }
-
+    // Customer deactivation function
     async function onDeac(user_id){
 
         try {
 
             const body = {user_id};
             
-            const response = await fetch("http://localhost:5000/dashboard/deactivatestaff",{
+            const response = await fetch("http://localhost:5000/dashboard/deactivateuser",{
                 method: "POST",
                 headers: {"Content-Type": "application/json", token: localStorage.token},
                 body: JSON.stringify(body)
             });
 
             const parseRes = await response.json();
-
-            // console.log(parseRes.token);
 
             if(parseRes === true) {
 
@@ -74,6 +67,12 @@ const CustomerList = ({setAuth}) => {
             console.error(err.message);
             
         }
+    }
+
+    // Date format function
+    function formatDate(stringDate){
+        var date=new Date(stringDate);
+        return date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
     }
 
     useEffect(() => {

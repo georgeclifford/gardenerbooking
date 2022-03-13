@@ -15,7 +15,9 @@ const Login = ({setAuth}) => {
         setInputs({...inputs, [e.target.name]: e.target.value});
     };
 
+    // Login submit function
     const onSubmitForm = async(e) => {
+
         e.preventDefault();
 
         try {
@@ -33,7 +35,7 @@ const Login = ({setAuth}) => {
             //console.log(parseRes);
 
             if(parseRes.user_id){
-                console.log(parseRes.user_id);
+
                 localStorage.setItem("user_id", parseRes.user_id)
             }
 

@@ -1,4 +1,6 @@
 import React, {Fragment, useState} from "react";
+
+// Bootstrap icon imports
 import { ReactComponent as Fbicon} from "bootstrap-icons/icons/facebook.svg";
 import { ReactComponent as Twticon} from "bootstrap-icons/icons/twitter.svg";
 import { ReactComponent as Igicon} from "bootstrap-icons/icons/instagram.svg";
