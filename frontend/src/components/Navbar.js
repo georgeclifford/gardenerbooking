@@ -46,7 +46,7 @@ const Navbar = (props) => {
         }
     }
 
-    // Category fetch funtion
+    // Category fetch function
     async function getCategoryDetails() {
 
         try {

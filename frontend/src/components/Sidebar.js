@@ -2,6 +2,7 @@ import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 
+// Bootstrap icon imports
 import { ReactComponent as Person} from "bootstrap-icons/icons/person-square.svg";
 import { ReactComponent as CreditCard} from "bootstrap-icons/icons/credit-card-2-front.svg";
 import { ReactComponent as Book} from "bootstrap-icons/icons/calendar2-check.svg";

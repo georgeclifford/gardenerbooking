@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 import Table from 'react-bootstrap/Table';
 
+// Bootstrap icon imports
 import { ReactComponent as Stop} from "bootstrap-icons/icons/slash-circle-fill.svg";
 import { ReactComponent as Activate} from "bootstrap-icons/icons/check-circle-fill.svg";
 

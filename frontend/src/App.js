@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/styles.css';
 
 
-// components
+// Components
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
