@@ -96,16 +96,10 @@ const CustomerCards = ({setAuth}) => {
             // console.log(parseRes.token);
 
             if(parseRes === true) {
-
-                toast.success("Card Added Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'add');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -133,16 +127,10 @@ const CustomerCards = ({setAuth}) => {
             // console.log(parseRes.token);
 
             if(parseRes === true) {
-
-                toast.success("Action Successful!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'deac');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -159,6 +147,36 @@ const CustomerCards = ({setAuth}) => {
     }
 
     useEffect(() => {
+
+        if (sessionStorage.getItem("msg")) {
+            if(sessionStorage.getItem("msg") === 'deac'){
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");                
+            }
+            else if(sessionStorage.getItem("msg") === 'add'){
+                toast.success("Added Successfully",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg"); 
+            }
+            else if(sessionStorage.getItem("msg") === 'update'){
+                toast.success("Updated Successfully",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg"); 
+            }
+            else{
+                toast.error(sessionStorage.getItem("msg"),{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");
+                
+            }
+
+        }
+
         getDetails();
         getCardDetails();
     }, [0]);

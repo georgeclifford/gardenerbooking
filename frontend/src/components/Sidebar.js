@@ -117,7 +117,7 @@ const Sidebar = (props) => {
                                         </Link>
                                         :
                                         <Link to="/category" className="nav-link text-white sidebutton">
-                                        <Category className="mx-1 mt-n1" /> Catgeory
+                                        <Category className="mx-1 mt-n1" /> Category
                                         </Link>
                                     }
                                 </li>
@@ -185,7 +185,7 @@ const Sidebar = (props) => {
                                 </li>
                             </ul>
 
-                        :
+                        : user_type === "staff" ?
 
                         // Staff Sidebar
 
@@ -235,6 +235,10 @@ const Sidebar = (props) => {
                                     }
                                 </li>
                             </ul>
+
+                            :
+
+                            <p className="m-auto text-muted"> </p>
 
                     }
 

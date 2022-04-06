@@ -2,6 +2,8 @@ const router = require("express").Router();
 const pool = require("../db");
 const authorization = require("../middleware/authorization");
 const bcrypt = require("bcrypt");
+const multer  = require('multer');
+const upload = multer();
 
 // DETAILS FETCHING
 
@@ -132,6 +134,29 @@ router.get("/categorydisplay", async(req, res) => {
     }
 });
 
+// Selected Category details fetching for display
+router.get("/selectedcategory", async(req, res) => {
+    try {
+
+        let c_id='';
+
+        c_id = req.header("c_id");
+
+        console.log(c_id);
+
+        const cat = await pool.query("SELECT * FROM tbl_category WHERE cat_id=$1", [c_id] );
+
+        return res.json(cat.rows[0]);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 // Specialization details fetching
 router.get("/specdetails", authorization, async(req, res) => {
     try {
@@ -145,6 +170,7 @@ router.get("/specdetails", authorization, async(req, res) => {
         staff_id = staff.rows[0].staff_id;
 
         const spec = await pool.query("SELECT * FROM tbl_specchild s, tbl_category c WHERE s.sm_id IN ( SELECT sm_id FROM tbl_specmaster WHERE staff_id = $1) AND s.cat_id=c.cat_id ORDER BY s.sc_id", [staff_id]);
+
 
         return res.json(spec.rows);
         
@@ -231,24 +257,30 @@ router.post("/newcard", authorization, async(req, res) => {
 
 // New category addition
 router.post("/newcategory", authorization, async(req, res) => {
-    try {
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        //res.json("not uploaded");
+        return res.status(401).json("Couldn't Add Category!");
+    }
+    else {
+
+        let imgFile = req.files.cat_image;
+        let uploadPath = "./images/"+imgFile.name;
 
         const {cat_name,cat_desc,cat_price} = req.body;
-
-        const newCategory = await pool.query("INSERT INTO tbl_category (cat_name, cat_desc, cat_price, cat_status) VALUES ($1, $2, $3, 'active') RETURNING *",
-        [cat_name, cat_desc, cat_price]);
-
-        if(newCategory.rows.length === 0){
-            return res.status(401).json("Couldn't Add Category!");
-        }
-
-        return res.json(true);
-
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
         
+        imgFile.mv(uploadPath, async function(err){
+            if(err){
+                return console.log(err);
+            }
+            else{
+                let add = await pool.query("INSERT INTO tbl_category(cat_name, cat_desc, cat_price, cat_status, cat_image)VALUES ($1, $2, $3, 'active', $4) RETURNING *",
+                [cat_name, cat_desc, cat_price, imgFile.name]);
+                if(add){
+                    res.json(true);
+                }
+            }
+        })
     }
 });
 
@@ -336,6 +368,57 @@ router.post("/newspec", authorization, async(req, res) => {
     }
 });
 
+// New booking
+router.post("/newbooking", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        var dt = new Date();
+
+        const {cat_id,bc_time,bc_date,name,house,street,dist,pin,card_id} = req.body;
+
+        console.log(cat_id, bc_time);
+
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const cust_id = cust.rows[0].cust_id;
+
+        const newBookMaster = await pool.query("INSERT INTO tbl_bookingmaster (cust_id, tot_amt, bm_date, bm_status) VALUES ($1, '0', $2, 'alloc_pending') RETURNING *",
+        [cust_id, dt]);
+
+        if(newBookMaster.rows.length === 0){
+            return res.status(401).json("Booking Failed!");
+        }
+
+        const bmaster_id = newBookMaster.rows[0].bmaster_id;
+
+        const newBookChild = await pool.query("INSERT INTO tbl_bookingchild (bmaster_id, cat_id, bc_name, bc_house, bc_street, bc_dist, bc_pin, bc_time, bc_date, bc_hours) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '0') RETURNING *",
+        [bmaster_id, cat_id, name, house, street, dist, pin, bc_time, bc_date]);
+
+        if(newBookChild.rows.length === 0){
+            return res.status(401).json("Booking Failed!");
+        }
+
+        const newPayment = await pool.query("INSERT INTO tbl_payment (bmaster_id, card_id, pay_type, pay_status, pay_date) VALUES ($1, $2, 'advance', 'paid', $3) RETURNING *",
+        [bmaster_id, card_id, dt]);
+
+        if(newPayment.rows.length === 0){
+            return res.status(401).json("Booking Failed!");
+        }
+
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 
 // EDITS/UPDATES
 
@@ -356,7 +439,7 @@ router.post("/update", authorization, async(req, res) => {
 
             const user = await pool.query("SELECT * FROM tbl_customer c, tbl_login l WHERE c.user_id = $1 AND l.user_id = $1 AND c.user_id = l.user_id", [req.user.id]);
 
-            return res.json(user.rows[0]);
+            return res.json(true);
         }
 
         else if(user_type === "staff"){
@@ -370,7 +453,7 @@ router.post("/update", authorization, async(req, res) => {
 
             const user = await pool.query("SELECT * FROM tbl_staff s, tbl_login l WHERE s.user_id = $1 AND l.user_id = $1 AND s.user_id = l.user_id", [req.user.id]);
 
-            return res.json(user.rows[0]);
+            return res.json(true);
 
         }
 
@@ -407,24 +490,40 @@ router.post("/staffedit", authorization, async(req, res) => {
 
 // Category editting
 router.post("/editcategory", authorization, async(req, res) => {
-    try {
+
+    if (!req.files || Object.keys(req.files).length === 0) {
+        //res.json("not uploaded");
+        // return res.status(401).json("Couldn't Edit Category!");
 
         const {cat_id,cat_name,cat_desc,cat_price} = req.body;
 
         const editCategory = await pool.query("UPDATE tbl_category SET cat_name=$2, cat_desc=$3, cat_price=$4 WHERE cat_id=$1 RETURNING *",
         [cat_id, cat_name, cat_desc, cat_price]);
 
-        if(editCategory.rows.length === 0){
-            return res.status(401).json("Couldn't Add Category!");
+        if(editCategory){
+            res.json(true);
         }
+    }
+    else {
 
-        return res.json(true);
+        let imgFile = req.files.cat_image;
+        let uploadPath = "./images/"+imgFile.name;
 
-    } catch (err) {
-
-        console.error(err.message);
-        return res.status(500).json("Server Error!");
+        const {cat_id,cat_name,cat_desc,cat_price} = req.body;
         
+        imgFile.mv(uploadPath, async function(err){
+            if(err){
+                return console.log(err);
+            }
+            else{
+                const editCategory = await pool.query("UPDATE tbl_category SET cat_name=$2, cat_desc=$3, cat_price=$4, cat_image=$5 WHERE cat_id=$1 RETURNING *",
+                [cat_id, cat_name, cat_desc, cat_price, imgFile.name]);
+
+                if(editCategory){
+                    res.json(true);
+                }
+            }
+        })
     }
 });
 

@@ -68,3 +68,39 @@ sc_status varchar(10) NOT NULL,
 FOREIGN KEY (sm_id) REFERENCES tbl_specmaster (sm_id),
 FOREIGN KEY (cat_id) REFERENCES tbl_category (cat_id)
 )
+
+CREATE TABLE tbl_bookingmaster(
+bmaster_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+cust_id integer NOT NULL,
+tot_amt decimal(8,2) NOT NULL,
+bm_date date NOT NULL,
+bm_status varchar(15) NOT NULL,
+FOREIGN KEY (cust_id) REFERENCES tbl_customer (cust_id)
+)
+
+CREATE TABLE tbl_bookingchild(
+bchild_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+bmaster_id integer NOT NULL,
+cat_id integer NOT NULL,
+bc_name varchar(25) NOT NULL,
+bc_house varchar(25) NOT NULL,
+bc_street varchar(25) NOT NULL,
+bc_dist varchar(25) NOT NULL,
+bc_pin varchar(25) NOT NULL,
+bc_time time NOT NULL,
+bc_date date NOT NULL,
+bc_hours integer NOT NULL,
+FOREIGN KEY (bmaster_id) REFERENCES tbl_bookingmaster (bmaster_id),
+FOREIGN KEY (cat_id) REFERENCES tbl_category (cat_id)
+)
+
+CREATE TABLE tbl_payment(
+pay_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+bmaster_id integer NOT NULL,
+card_id integer NOT NULL,
+pay_type varchar(15) NOT NULL,
+pay_status varchar(15) NOT NULL,
+pay_date date NOT NULL,
+FOREIGN KEY (bmaster_id) REFERENCES tbl_bookingmaster (bmaster_id),
+FOREIGN KEY (card_id) REFERENCES tbl_card (card_id)
+)

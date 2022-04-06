@@ -16,6 +16,7 @@ import Carousel from './components/Carousel';
 import Cards from './components/Cards';
 import Login from './components/Login';
 import Register from './components/Register';
+import CategoryView from './components/CategoryView';
 import Dashboard from './components/Dashboard';
 import CustomerCards from './components/CustomerCards';
 import CustomerBookings from './components/CustomerBookings';
@@ -68,18 +69,19 @@ function App() {
       <Navbar isLoggedin={isAuthenticated} />
           <Routes>
             <Route exact path="/" element = { <> <Carousel setAuth={!setAuth} /> <Cards setAuth={!setAuth} /> </> }/>
+            <Route exact path="/categoryview" element = { <CategoryView isLoggedin={isAuthenticated} /> }/>
             <Route exact path="/login" element = { !isAuthenticated ? ( <Login setAuth = {setAuth} /> ) : ( <Navigate to="/dashboard" /> )} />
             <Route exact path="/register" element = { !isAuthenticated ? ( <Register setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/dashboard" element = { isAuthenticated ? ( <Dashboard setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/customercards" element = { isAuthenticated ? ( <CustomerCards setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/customerbookings" element = { isAuthenticated ? ( <CustomerBookings setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/customerlist" element = { isAuthenticated ? ( <CustomerList setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/category" element = { isAuthenticated ? ( <Category setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/bookings" element = { isAuthenticated ? ( <Bookings setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/reports" element = { isAuthenticated ? ( <Reports setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/specializations" element = { isAuthenticated ? ( <Specializations setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/allocations" element = { isAuthenticated ? ( <Allocations setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
-            <Route exact path="/feedbacks" element = { isAuthenticated ? ( <Feedbacks setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
+            <Route exact path="/dashboard" element = { isAuthenticated ? ( <Dashboard setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/customercards" element = { isAuthenticated ? ( <CustomerCards setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/customerbookings" element = { isAuthenticated ? ( <CustomerBookings setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/customerlist" element = { isAuthenticated ? ( <CustomerList setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/category" element = { isAuthenticated ? ( <Category setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/bookings" element = { isAuthenticated ? ( <Bookings setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/reports" element = { isAuthenticated ? ( <Reports setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/specializations" element = { isAuthenticated ? ( <Specializations setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/allocations" element = { isAuthenticated ? ( <Allocations setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/feedbacks" element = { isAuthenticated ? ( <Feedbacks setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
           </Routes>
         <Footer />
       </Router>

@@ -196,16 +196,10 @@ const Dashboard = ({setAuth}) => {
             // console.log(parseRes.token);
 
             if(parseRes === true) {
-
-                toast.success("Staff Added Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'add');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -237,16 +231,10 @@ const Dashboard = ({setAuth}) => {
             // console.log(parseRes.token);
 
             if(parseRes === true) {
-
-                toast.success("Specialization Added Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'add');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -275,17 +263,11 @@ const Dashboard = ({setAuth}) => {
 
             // console.log(parseRes.token);
 
-            if(parseRes) {
-
-                toast.success("Updated Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+            if(parseRes === true) {
+                sessionStorage.setItem('msg', 'update');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -315,16 +297,10 @@ const Dashboard = ({setAuth}) => {
             // console.log(parseRes.token);
 
             if(parseRes === true) {
-
-                toast.success("Updated Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'update');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -352,15 +328,10 @@ const Dashboard = ({setAuth}) => {
             const parseRes = await response.json();
 
             if(parseRes === true) {
-
-                toast.success("Password Changed Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'update');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
 
@@ -389,17 +360,11 @@ const Dashboard = ({setAuth}) => {
             const parseRes = await response.json();
 
             if(parseRes === true) {
-
-                toast.success("Password Changed Successfully!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'update');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
-
 
         } catch (err) {
 
@@ -426,18 +391,10 @@ const Dashboard = ({setAuth}) => {
             const parseRes = await response.json();
 
             if(parseRes === true) {
-
-                localStorage.removeItem("token");
-                setAuth(false);
-                toast.success("Successfully Deactivated!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'deac');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
 
@@ -464,16 +421,10 @@ const Dashboard = ({setAuth}) => {
             const parseRes = await response.json();
 
             if(parseRes === true) {
-
-                toast.success("Action Successful!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'deac');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -501,16 +452,10 @@ const Dashboard = ({setAuth}) => {
             // console.log(parseRes.token);
 
             if(parseRes === true) {
-
-                toast.success("Action Successful!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-
+                sessionStorage.setItem('msg', 'deac');
+                window.location.reload(true);
             } else {
-
-                toast.error(parseRes,{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
+                sessionStorage.setItem('msg', 'false');
             }
 
         } catch (err) {
@@ -543,6 +488,36 @@ const Dashboard = ({setAuth}) => {
     }
 
     useEffect(() => {
+
+        if (sessionStorage.getItem("msg")) {
+            if(sessionStorage.getItem("msg") === 'deac'){
+                toast.success("Action Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");                
+            }
+            else if(sessionStorage.getItem("msg") === 'add'){
+                toast.success("Added Successfully",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg"); 
+            }
+            else if(sessionStorage.getItem("msg") === 'update'){
+                toast.success("Updated Successfully",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg"); 
+            }
+            else{
+                toast.error(sessionStorage.getItem("msg"),{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");
+                
+            }
+
+        }
+
         getDetails();
         getStaffDetails();
         getCategoryDetails();
@@ -1008,7 +983,7 @@ const Dashboard = ({setAuth}) => {
             
                             </div>
 
-                    :
+                    : user_type === "staff" ?
 
                     // Staff panel
 
@@ -1108,6 +1083,10 @@ const Dashboard = ({setAuth}) => {
                                 </div>
                             
                         </div>
+
+                        :
+                        
+                        <p className="m-auto text-muted"> </p>
 
                 }
 

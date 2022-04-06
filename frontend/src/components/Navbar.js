@@ -110,7 +110,22 @@ const Navbar = (props) => {
                                     {
                                         data.map((item, index) => (
 
-                                            <li key={item.cat_id}><a className="dropdown-item" href="#">{item.cat_name}</a></li>
+                                            <li key={item.cat_id}>
+                                                
+                                                <Link
+                                                    to={{
+                                                        pathname: "/categoryview",
+                                                        search: `?cat_id=${item.cat_id}`
+                                                    }}
+                                                    
+                                                    className="dropdown-item"
+                                                >
+                                                        
+                                                    {item.cat_name}
+                                                    
+                                                </Link>
+                                                                                                    
+                                            </li>
 
                                         ))
                                     }
