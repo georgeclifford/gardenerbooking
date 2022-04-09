@@ -3,9 +3,7 @@ import { toast } from "react-toastify";
 
 import { ReactComponent as Info} from "bootstrap-icons/icons/info-circle.svg";
 
-const CustomerWorkPending = ({setAuth}) => {
-
-    const [isActive,setActive] = useState("booking");
+const CustomerWorkPending = () => {
 
     const [data, setData] = useState([]);
 

@@ -14,6 +14,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Carousel from './components/Carousel';
 import Cards from './components/Cards';
+import AboutUs from './components/AboutUs';
 import Login from './components/Login';
 import Register from './components/Register';
 import CategoryView from './components/CategoryView';
@@ -70,6 +71,7 @@ function App() {
           <Routes>
             <Route exact path="/" element = { <> <Carousel setAuth={!setAuth} /> <Cards setAuth={!setAuth} /> </> }/>
             <Route exact path="/categoryview" element = { <CategoryView isLoggedin={isAuthenticated} /> }/>
+            <Route exact path="/aboutus" element = { <AboutUs /> }/>
             <Route exact path="/login" element = { !isAuthenticated ? ( <Login setAuth = {setAuth} /> ) : ( <Navigate to="/dashboard" /> )} />
             <Route exact path="/register" element = { !isAuthenticated ? ( <Register setAuth = {setAuth} /> ) : ( <Navigate to="/login" /> )} />
             <Route exact path="/dashboard" element = { isAuthenticated ? ( <Dashboard setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />

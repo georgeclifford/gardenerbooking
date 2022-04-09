@@ -1,10 +1,7 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
-import Sidebar from "./Sidebar";
 
-const CustomerPaymentPending = ({setAuth}) => {
-
-    const [isActive,setActive] = useState("booking");
+const CustomerPaymentPending = () => {
     
     const [data, setData] = useState([]);
 

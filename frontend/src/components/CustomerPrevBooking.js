@@ -1,10 +1,7 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
-import Sidebar from "./Sidebar";
 
-const CustomerPrevBooking = ({setAuth}) => {
-
-    const [isActive,setActive] = useState("booking");
+const CustomerPrevBooking = () => {
 
     const [data, setData] = useState([]);
 

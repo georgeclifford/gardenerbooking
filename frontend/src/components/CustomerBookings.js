@@ -1,5 +1,4 @@
 import React, {Fragment, useState, useEffect} from "react";
-import { toast } from "react-toastify";
 import Sidebar from "./Sidebar";
 
 import CustomerWorkPending from './CustomerWorkPending';
@@ -51,8 +50,7 @@ const CustomerBookings = ({setAuth}) => {
                 <Sidebar setAuth={setAuth} isActive={isActive} />
                 <div className="pad1 col-lg-8 col-md-8 col-sm-8 mx-auto">
                     <h1 className="mb-5 text-center">Bookings</h1>
-                    {/* <p className="mt-5 text-center text-muted">No Bookings Yet!</p> */}
-
+                    
                     <TabDisplay />
 
                 </div>

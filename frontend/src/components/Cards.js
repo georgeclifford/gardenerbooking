@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Cards = () => {
     return (
         <Fragment>
-            <h3 className="mt-5 text-center">Features.</h3>
+            <h3 className="mt-5 text-center">Why Choose Us?</h3>
             <div className="row row-cols-1 row-cols-md-2 g-4 mx-5 my-3">
                 <div className="col">
                 <div className="card">
