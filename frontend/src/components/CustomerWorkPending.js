@@ -138,24 +138,14 @@ const CustomerWorkPending = () => {
     useEffect(() => {
 
         if (sessionStorage.getItem("msg")) {
+            
             if(sessionStorage.getItem("msg") === 'cancel'){
                 toast.success("Cancellation Successful!",{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
                 sessionStorage.removeItem("msg");                
             }
-            else if(sessionStorage.getItem("msg") === 'add'){
-                toast.success("Added Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
-            else if(sessionStorage.getItem("msg") === 'update'){
-                toast.success("Updated Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
+            
             else{
                 toast.error(sessionStorage.getItem("msg"),{
                     position: toast.POSITION.BOTTOM_RIGHT

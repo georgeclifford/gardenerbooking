@@ -11,16 +11,13 @@ const Dashboard = ({setAuth}) => {
     const [isActive,setActive] = useState("dashboard");
 
     const [inputs, setInputs] = useState({
+        user_id: "",
         user_type: "",
         username: "",
         password: ""
       });
 
       const {user_id,user_type,username,password} = inputs;
-    
-      const onChange = (e) => {
-          setInputs({...inputs,[e.target.name] : e.target.value});
-      }
 
     // Function for fetching Customer/Staff/Admin panel details
     async function getDetails() {
@@ -48,53 +45,6 @@ const Dashboard = ({setAuth}) => {
     }
 
     useEffect(() => {
-
-        if (sessionStorage.getItem("msg")) {
-            if(sessionStorage.getItem("msg") === 'deac'){
-                toast.success("Action Successful!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg");                
-            }
-            else if(sessionStorage.getItem("msg") === 'logout'){
-                toast.success("Logged Out Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
-            else if(sessionStorage.getItem("msg") === 'login'){
-                toast.success("Logged In Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
-            else if(sessionStorage.getItem("msg") === 'register'){
-                toast.success("Registered Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
-            else if(sessionStorage.getItem("msg") === 'add'){
-                toast.success("Added Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
-            else if(sessionStorage.getItem("msg") === 'update'){
-                toast.success("Updated Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
-            else{
-                toast.error(sessionStorage.getItem("msg"),{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg");
-                
-            }
-
-        }
 
         getDetails();
 

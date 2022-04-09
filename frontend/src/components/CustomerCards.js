@@ -149,24 +149,21 @@ const CustomerCards = ({setAuth}) => {
     useEffect(() => {
 
         if (sessionStorage.getItem("msg")) {
+
             if(sessionStorage.getItem("msg") === 'deac'){
                 toast.success("Action Successful!",{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
                 sessionStorage.removeItem("msg");                
             }
+
             else if(sessionStorage.getItem("msg") === 'add'){
                 toast.success("Added Successfully",{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
                 sessionStorage.removeItem("msg"); 
             }
-            else if(sessionStorage.getItem("msg") === 'update'){
-                toast.success("Updated Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
+            
             else{
                 toast.error(sessionStorage.getItem("msg"),{
                     position: toast.POSITION.BOTTOM_RIGHT

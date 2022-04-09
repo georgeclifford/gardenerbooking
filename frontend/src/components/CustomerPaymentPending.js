@@ -133,12 +133,7 @@ const CustomerPaymentPending = () => {
                 });
                 sessionStorage.removeItem("msg");                
             }
-            else if(sessionStorage.getItem("msg") === 'add'){
-                toast.success("Added Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
+            
             else if(sessionStorage.getItem("msg") === 'update'){
                 toast.success("Payment Successful!",{
                     position: toast.POSITION.BOTTOM_RIGHT

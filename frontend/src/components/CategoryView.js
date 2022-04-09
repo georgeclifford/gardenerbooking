@@ -55,8 +55,6 @@ const CategoryView = ({isLoggedin}) => {
     
                 const parseRes = await response.json();
     
-                // console.log(parseRes);
-    
                 setUser(parseRes.user_type);
                 
             } catch (err) {
@@ -117,9 +115,6 @@ const CategoryView = ({isLoggedin}) => {
 
             setData(parseRes);
 
-            // console.log(parseRes.token);
-
-
         } catch (err) {
 
             console.error(err.message);
@@ -143,8 +138,6 @@ const CategoryView = ({isLoggedin}) => {
             });
 
             const parseRes = await response.json();
-
-            // console.log(parseRes.token);
 
             if(parseRes === true) {
                 sessionStorage.setItem('msg', 'book');
@@ -219,30 +212,19 @@ const CategoryView = ({isLoggedin}) => {
       useEffect(() => {
 
         if (sessionStorage.getItem("msg")) {
-            if(sessionStorage.getItem("msg") === 'deac'){
-                toast.success("Action Successful!",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg");                
-            }
-            else if(sessionStorage.getItem("msg") === 'book'){
+
+            if(sessionStorage.getItem("msg") === 'book'){
                 toast.success("Booking Successful",{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
                 sessionStorage.removeItem("msg"); 
             }
-            else if(sessionStorage.getItem("msg") === 'update'){
-                toast.success("Updated Successfully",{
-                    position: toast.POSITION.BOTTOM_RIGHT
-                });
-                sessionStorage.removeItem("msg"); 
-            }
+            
             else{
                 toast.error(sessionStorage.getItem("msg"),{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
                 sessionStorage.removeItem("msg");
-                
             }
 
         }
