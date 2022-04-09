@@ -38,6 +38,7 @@ CREATE TABLE tbl_category(
 cat_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 cat_name varchar(50) NOT NULL,
 cat_desc varchar(500) NOT NULL,
+cat_image varchar(500) NOT NULL,
 cat_price decimal(8,2) NOT NULL,
 cat_status varchar(10) NOT NULL
 )
@@ -75,6 +76,7 @@ cust_id integer NOT NULL,
 tot_amt decimal(8,2) NOT NULL,
 bm_date date NOT NULL,
 bm_status varchar(15) NOT NULL,
+bm_reason varchar(500),
 FOREIGN KEY (cust_id) REFERENCES tbl_customer (cust_id)
 )
 
@@ -87,6 +89,7 @@ bc_house varchar(25) NOT NULL,
 bc_street varchar(25) NOT NULL,
 bc_dist varchar(25) NOT NULL,
 bc_pin varchar(25) NOT NULL,
+bc_phone numeric(10) NOT NULL,
 bc_time time NOT NULL,
 bc_date date NOT NULL,
 bc_hours integer NOT NULL,
@@ -103,4 +106,12 @@ pay_status varchar(15) NOT NULL,
 pay_date date NOT NULL,
 FOREIGN KEY (bmaster_id) REFERENCES tbl_bookingmaster (bmaster_id),
 FOREIGN KEY (card_id) REFERENCES tbl_card (card_id)
+)
+
+CREATE TABLE tbl_feedback(
+feed_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+bmaster_id integer NOT NULL,
+feedback varchar(500) NOT NULL,
+feed_date date NOT NULL,
+FOREIGN KEY (bmaster_id) REFERENCES tbl_bookingmaster (bmaster_id)
 )

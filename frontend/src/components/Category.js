@@ -286,7 +286,7 @@ const Category = ({setAuth}) => {
                                             <label htmlFor="UploadImage" className="form-label d-flex flex-column align-items-center">
                                                 <img className="img" src={img_preview} />
                                             </label>
-                                            <input type="file" className="form-control" name="cat_image" onChange={handleImg} id="UploadImage" accept=".jpg, .png, .jpeg" required />
+                                            <input type="file" className="form-control visually-hidden" name="cat_image" onChange={handleImg} id="UploadImage" accept=".jpg, .png, .jpeg" required />
                                         </div>
 
                                         <div className="col-md-8 mb-3">
@@ -331,7 +331,7 @@ const Category = ({setAuth}) => {
                                             <label htmlFor="EditImage" className="form-label d-flex flex-column align-items-center">
                                                 <img className="img" src={img_preview} />
                                             </label>
-                                            <input type="file" className="form-control" name="cat_im"  onChange={ handleImg } id="EditImage" accept=".jpg, .png, .jpeg" />
+                                            <input type="file" className="form-control visually-hidden" name="cat_im"  onChange={ handleImg } id="EditImage" accept=".jpg, .png, .jpeg" />
                                         </div>
 
                                         <div className="col-md-8 mb-3">

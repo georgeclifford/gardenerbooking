@@ -90,55 +90,55 @@ const Sidebar = (props) => {
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
                                     { isActive === "dashboard" ? 
-                                        <Link to="/dashboard" className="nav-link active sidebutton">
+                                        <Link to="/dashboard" className="nav-link active button">
                                             <Person className="mx-1 mt-n1" /> Staff
                                         </Link>
                                         :
-                                        <Link to="/dashboard" className="nav-link text-white sidebutton">
+                                        <Link to="/dashboard" className="nav-link text-white button">
                                             <Person className="mx-1 mt-n1" /> Staff
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "customerlist" ? 
-                                        <Link to="/customerlist" className="nav-link active sidebutton">
+                                        <Link to="/customerlist" className="nav-link active button">
                                         <People className="mx-1 mt-n1" /> Customer
                                         </Link>
                                         :
-                                        <Link to="/customerlist" className="nav-link text-white sidebutton">
+                                        <Link to="/customerlist" className="nav-link text-white button">
                                         <People className="mx-1 mt-n1" /> Customer
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "category" ? 
-                                        <Link to="/category" className="nav-link active sidebutton">
+                                        <Link to="/category" className="nav-link active button">
                                         <Category className="mx-1 mt-n1" /> Category
                                         </Link>
                                         :
-                                        <Link to="/category" className="nav-link text-white sidebutton">
+                                        <Link to="/category" className="nav-link text-white button">
                                         <Category className="mx-1 mt-n1" /> Category
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "bookings" ? 
-                                        <Link to="/bookings" className="nav-link active sidebutton">
+                                        <Link to="/bookings" className="nav-link active button">
                                         <Book className="mx-1 mt-n1" /> Bookings
                                         </Link>
                                         :
-                                        <Link to="/bookings" className="nav-link text-white sidebutton">
+                                        <Link to="/bookings" className="nav-link text-white button">
                                         <Book className="mx-1 mt-n1" /> Bookings
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "reports" ? 
-                                        <Link to="/reports" className="nav-link active sidebutton">
+                                        <Link to="/reports" className="nav-link active button">
                                         <Report className="mx-1 mt-n1" /> Report
                                         </Link>
                                         :
-                                        <Link to="/reports" className="nav-link text-white sidebutton">
+                                        <Link to="/reports" className="nav-link text-white button">
                                         <Report className="mx-1 mt-n1" /> Report
                                         </Link>
                                     }
@@ -152,33 +152,33 @@ const Sidebar = (props) => {
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
                                     { isActive === "dashboard" ? 
-                                        <Link to="/dashboard" className="nav-link active sidebutton">
+                                        <Link to="/dashboard" className="nav-link active button">
                                             <Person className="mx-1 mt-n1" /> Profile
                                         </Link>
                                         :
-                                        <Link to="/dashboard" className="nav-link text-white sidebutton">
+                                        <Link to="/dashboard" className="nav-link text-white button">
                                             <Person className="mx-1 mt-n1" /> Profile
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "cards" ? 
-                                        <Link to="/customercards" className="nav-link active sidebutton">
+                                        <Link to="/customercards" className="nav-link active button">
                                         <CreditCard className="mx-1 mt-n1" /> Cards
                                         </Link>
                                         :
-                                        <Link to="/customercards" className="nav-link text-white sidebutton">
+                                        <Link to="/customercards" className="nav-link text-white button">
                                         <CreditCard className="mx-1 mt-n1" /> Cards
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "booking" ? 
-                                        <Link to="/customerbookings" className="nav-link active sidebutton">
+                                        <Link to="/customerbookings" className="nav-link active button">
                                         <Book className="mx-1 mt-n1" /> Booking
                                         </Link>
                                         :
-                                        <Link to="/customerbookings" className="nav-link text-white sidebutton">
+                                        <Link to="/customerbookings" className="nav-link text-white button">
                                         <Book className="mx-1 mt-n1" /> Booking
                                         </Link>
                                     }
@@ -192,44 +192,44 @@ const Sidebar = (props) => {
                             <ul className="nav nav-pills flex-column mb-auto">
                                 <li className="nav-item">
                                     { isActive === "dashboard" ? 
-                                        <Link to="/dashboard" className="nav-link active sidebutton">
+                                        <Link to="/dashboard" className="nav-link active button">
                                             <Person className="mx-1 mt-n1" /> Profile
                                         </Link>
                                         :
-                                        <Link to="/dashboard" className="nav-link text-white sidebutton">
+                                        <Link to="/dashboard" className="nav-link text-white button">
                                             <Person className="mx-1 mt-n1" /> Profile
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "specializations" ? 
-                                        <Link to="/specializations" className="nav-link active sidebutton">
+                                        <Link to="/specializations" className="nav-link active button">
                                         <Check className="mx-1 mt-n1" /> Specializations
                                         </Link>
                                         :
-                                        <Link to="/specializations" className="nav-link text-white sidebutton">
+                                        <Link to="/specializations" className="nav-link text-white button">
                                         <Check className="mx-1 mt-n1" /> Specializations
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "allocations" ? 
-                                        <Link to="/allocations" className="nav-link active sidebutton">
+                                        <Link to="/allocations" className="nav-link active button">
                                         <Work className="mx-1 mt-n1" /> Allocations
                                         </Link>
                                         :
-                                        <Link to="/allocations" className="nav-link text-white sidebutton">
+                                        <Link to="/allocations" className="nav-link text-white button">
                                         <Work className="mx-1 mt-n1" /> Allocations
                                         </Link>
                                     }
                                 </li>
                                 <li>
                                     { isActive === "feedbacks" ? 
-                                        <Link to="/feedbacks" className="nav-link active sidebutton">
+                                        <Link to="/feedbacks" className="nav-link active button">
                                         <Feedback className="mx-1 mt-n1" /> Feedbacks
                                         </Link>
                                         :
-                                        <Link to="/feedbacks" className="nav-link text-white sidebutton">
+                                        <Link to="/feedbacks" className="nav-link text-white button">
                                         <Feedback className="mx-1 mt-n1" /> Feedbacks
                                         </Link>
                                     }

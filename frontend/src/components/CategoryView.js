@@ -32,12 +32,13 @@ const CategoryView = ({isLoggedin}) => {
         name: "",
         house: "",
         street: "",
-        dist: "",
+        dist: "Ernakulam",
         pin: "",
+        phno: "",
         card_id: ""
       });
 
-      const { cat_id,cat_name,cat_desc,cat_price,cat_status,cat_image, bc_time, bc_date, name,house,street,dist,pin,card_id} = inputs;
+      const { cat_id,cat_name,cat_desc,cat_price,cat_status,cat_image, bc_time, bc_date, name,house,street,dist,pin,phno,card_id} = inputs;
 
       const onChange = (e) => {
         setInputs({...inputs,[e.target.name] : e.target.value});
@@ -133,7 +134,7 @@ const CategoryView = ({isLoggedin}) => {
 
         try {
 
-            const body = {cat_id,bc_time,bc_date,name,house,street,dist,pin,card_id};
+            const body = {cat_id,cat_price,bc_time,bc_date,name,house,street,dist,pin,phno,card_id};
             
             const response = await fetch("http://localhost:5000/dashboard/newbooking",{
                 method: "POST",
@@ -170,6 +171,46 @@ const CategoryView = ({isLoggedin}) => {
         }
 
         return <Link to="/login" className="btn btn-primary col-4"><Book className="mt-n1 mx-1" /> Book Now</Link>
+    }
+
+    // function to calculate tomorrow's date
+    function Datetoday(){
+        var today = new Date();
+        var dd = today.getDate() + 1;
+        var mm = today.getMonth() + 1; //January is 0 so need to add 1 to make it 1!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        return today;
+    }
+
+    // function to calculate next month's date from today's date
+    function DateNextMonth(){
+        var today = new Date();
+        var dd = today.getDate() + 1;
+        var mm = today.getMonth() + 2; //January is 0 so need to add 1 to make it 1!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm
+        }
+
+        today = yyyy + '-' + mm + '-' + dd;
+
+        return today;
     }
 
     console.log(c_id);
@@ -240,7 +281,7 @@ const CategoryView = ({isLoggedin}) => {
                                     <button type="button" className="btn-close" data-bs-dismiss="modal" ></button>
                                 </div>
 
-                                <form onSubmit={onSubmitForm} className=" row g-3 needs-validation mx-3" encType="multipart/form-data">
+                                <form onSubmit={onSubmitForm} className=" row g-3 needs-validation mx-3">
                                     <div className="modal-body d-flex flex-column align-items-center">
 
                                         <div className="col-md-8 mb-3">
@@ -260,7 +301,7 @@ const CategoryView = ({isLoggedin}) => {
 
                                         <div className="col-md-8 ">
                                             <label  className="form-label">District</label>
-                                            <input type="text" name="dist" onChange={e => onChange(e)} value={"Ernakulam"} className="form-control" placeholder="District" disabled required />
+                                            <input type="text" name="dist" onChange={e => onChange(e)} value={inputs.dist} className="form-control" placeholder="District" disabled required />
                                             <p className="text-danger"> <small><Info className="mt-n1 mx-1" />Our services are available only in Ernakulam!</small></p>
                                         </div>
 
@@ -270,13 +311,18 @@ const CategoryView = ({isLoggedin}) => {
                                         </div>
 
                                         <div className="col-md-8 mb-3">
+                                            <label  className="form-label">Phone</label>
+                                            <input type="text" name="phno" onChange={e => onChange(e)} minLength="10" maxLength="10"  className="form-control" placeholder="9876543210" required />
+                                        </div>
+
+                                        <div className="col-md-8 mb-3">
                                             <label  className="form-label">Time Of Visit</label>
-                                            <input type="time" name="bc_time" onChange={e => onChange(e)} className="form-control" required />
+                                            <input type="time" name="bc_time" min="08:00" max="16:00" onChange={e => onChange(e)} className="form-control" required />
                                         </div>
 
                                         <div className="col-md-8 mb-3">
                                             <label  className="form-label">Date Of Visit</label>
-                                            <input type="date" name="bc_date" onChange={e => onChange(e)} className="form-control" required />
+                                            <input type="date" name="bc_date" min={Datetoday()} max={DateNextMonth()} onChange={e => onChange(e)} className="form-control" required />
                                         </div>
 
                                     </div>

@@ -184,6 +184,96 @@ router.get("/specdetails", authorization, async(req, res) => {
 });
 
 
+// work pending details fetching
+router.get("/workpending", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat WHERE m.cust_id = $1 AND (m.bm_status = 'alloc_pending' OR m.bm_status = 'work_pending') AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", [cust.rows[0].cust_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// payment pending details fetching
+router.get("/paymentpending", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat WHERE m.cust_id = $1 AND m.bm_status = 'pay_pending' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", [cust.rows[0].cust_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// completed work details fetching
+router.get("/completedwork", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat WHERE m.cust_id = $1 AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", [cust.rows[0].cust_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
+// cancelled booking details fetching
+router.get("/cancelled", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_payment p WHERE m.cust_id = $1 AND m.bm_status = 'cancelled' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id AND m.bmaster_id = p.bmaster_id ORDER BY m.bmaster_id DESC", [cust.rows[0].cust_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
 // NEW ADDITIONS
 
 // New staff addition
@@ -378,7 +468,7 @@ router.post("/newbooking", authorization, async(req, res) => {
 
         var dt = new Date();
 
-        const {cat_id,bc_time,bc_date,name,house,street,dist,pin,card_id} = req.body;
+        const {cat_id,cat_price,bc_time,bc_date,name,house,street,dist,pin,phno,card_id} = req.body;
 
         console.log(cat_id, bc_time);
 
@@ -386,8 +476,8 @@ router.post("/newbooking", authorization, async(req, res) => {
 
         const cust_id = cust.rows[0].cust_id;
 
-        const newBookMaster = await pool.query("INSERT INTO tbl_bookingmaster (cust_id, tot_amt, bm_date, bm_status) VALUES ($1, '0', $2, 'alloc_pending') RETURNING *",
-        [cust_id, dt]);
+        const newBookMaster = await pool.query("INSERT INTO tbl_bookingmaster (cust_id, tot_amt, bm_date, bm_status) VALUES ($1, $2, $3, 'alloc_pending') RETURNING *",
+        [cust_id,cat_price, dt]);
 
         if(newBookMaster.rows.length === 0){
             return res.status(401).json("Booking Failed!");
@@ -395,8 +485,8 @@ router.post("/newbooking", authorization, async(req, res) => {
 
         const bmaster_id = newBookMaster.rows[0].bmaster_id;
 
-        const newBookChild = await pool.query("INSERT INTO tbl_bookingchild (bmaster_id, cat_id, bc_name, bc_house, bc_street, bc_dist, bc_pin, bc_time, bc_date, bc_hours) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, '0') RETURNING *",
-        [bmaster_id, cat_id, name, house, street, dist, pin, bc_time, bc_date]);
+        const newBookChild = await pool.query("INSERT INTO tbl_bookingchild (bmaster_id, cat_id, bc_name, bc_house, bc_street, bc_dist, bc_pin, bc_phone, bc_time, bc_date, bc_hours) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, '0') RETURNING *",
+        [bmaster_id, cat_id, name, house, street, dist, pin, phno, bc_time, bc_date]);
 
         if(newBookChild.rows.length === 0){
             return res.status(401).json("Booking Failed!");
@@ -524,6 +614,43 @@ router.post("/editcategory", authorization, async(req, res) => {
                 }
             }
         })
+    }
+});
+
+// Making final payment
+router.post("/bookingpay", authorization, async(req, res) => {
+    try {
+
+        const {card_id,bmaster_id,tot_amt,bc_hours,feedback} = req.body;
+
+        const tot = tot_amt * bc_hours;
+
+            const updatebooking = await pool.query("UPDATE tbl_bookingmaster SET tot_amt=$1, bm_status='completed' WHERE bmaster_id=$2 RETURNING *",
+            [tot, bmaster_id]);
+
+            var dt = new Date();
+
+            const newPayment = await pool.query("INSERT INTO tbl_payment (bmaster_id, card_id, pay_type, pay_status, pay_date) VALUES ($1, $2, 'final', 'paid', $3) RETURNING *",
+            [bmaster_id, card_id, dt]);
+
+            if(newPayment.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            const newFeedback = await pool.query("INSERT INTO tbl_feedback (bmaster_id, feedback, feed_date) VALUES ($1, $2, $3) RETURNING *",
+            [bmaster_id, feedback, dt]);
+
+            if(newFeedback.rows.length === 0){
+                return res.status(401).json("Updation Failed!");
+            }
+
+            return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
     }
 });
 
@@ -759,5 +886,39 @@ router.post("/deactivatecategory", authorization, async(req, res) => {
         
     }
 });
+
+// work pending details fetching
+router.post("/cancelbooking", authorization, async(req, res) => {
+    try {
+
+        const {bmaster_id, stat, bm_reason} = req.body;
+
+        if(stat == 'no_refund'){
+
+            const updatebooking = await pool.query("UPDATE tbl_bookingmaster SET bm_status='cancelled', bm_reason=$2 WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id,bm_reason]);
+
+            return res.json(true);
+        }
+
+        else if(stat == 'refund'){
+
+            const updatebooking = await pool.query("UPDATE tbl_bookingmaster SET bm_status='cancelled', bm_reason=$2 WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id,bm_reason]);
+
+            const updatepayment = await pool.query("UPDATE tbl_payment SET pay_status='refunded' WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id]);
+
+            return res.json(true);
+        }
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 
 module.exports = router;

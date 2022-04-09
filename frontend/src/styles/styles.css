@@ -15,12 +15,13 @@
   min-height: calc(100vh - 100px);
 }
 
-.active {
+.active.button {
   background-color: rgb(0, 0, 0) !important;
 }
 
-.sidebutton:hover {
-  background-color: rgb(70, 70, 70) !important;
+.button:hover {
+  background-color: rgb(100, 100, 100) !important;
+  color: white !important;
 }
 
 .mt-n1 {
