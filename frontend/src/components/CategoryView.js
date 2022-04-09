@@ -8,8 +8,6 @@ import { ReactComponent as Info} from "bootstrap-icons/icons/info-circle.svg";
 
 const CategoryView = ({isLoggedin}) => {
 
-    const [isActive,setActive] = useState("reports");
-
     const [user_type,setUser] = useState("");
 
     const [data, setData] = useState([]);
