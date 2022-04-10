@@ -1,11 +1,11 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 
-import { ReactComponent as Info} from "bootstrap-icons/icons/info-circle.svg";
-
-const CustomerWorkPending = () => {
+const WorkPending = () => {
 
     const [data, setData] = useState([]);
+    
+    const [staff, setStaff] = useState([]);
 
     const [todaydate, setDate] = useState([]);
 
@@ -13,11 +13,13 @@ const CustomerWorkPending = () => {
 
     const [inputs, setInputs] = useState({
         bmaster_id: "",
+        cat_id: "",
         stat: "",
-        bm_reason: ""
+        bm_reason: "",
+        staff_id: ""
       });
 
-      const {bmaster_id,stat,bm_reason} = inputs;
+      const {bmaster_id,stat,bm_reason,staff_id,cat_id} = inputs;
 
       const onChange = (e) => {
         setInputs({...inputs,[e.target.name] : e.target.value});
@@ -35,9 +37,9 @@ const CustomerWorkPending = () => {
      async function getDetails() {
         try {
 
-            const response = await fetch("http://localhost:5000/dashboard/workpending", {
+            const response = await fetch("http://localhost:5000/dashboard/adminworkpending", {
                 method: "GET",
-                headers: {token: localStorage.token, user_id: localStorage.user_id}
+                headers: {token: localStorage.token}
             });
 
             const parseRes = await response.json();
@@ -84,13 +86,63 @@ const CustomerWorkPending = () => {
         }
     }
 
-    // setting data for Booking Cancellation
-    function onCancel(bmaster_id, stat){
+    // staff allocation function
+    const onSubmitStaff = async(e) => {
+
+        e.preventDefault();
+
+        try {
+
+            const body = {bmaster_id,staff_id};
+            
+            const response = await fetch("http://localhost:5000/dashboard/editalloc",{
+                method: "POST",
+                headers: {"Content-Type": "application/json", token: localStorage.token},
+                body: JSON.stringify(body)
+            });
+
+            const parseRes = await response.json();
+
+            // console.log(parseRes.token);
+
+            if(parseRes === true) {
+                sessionStorage.setItem('msg', 'alloc');
+                window.location.reload(true);
+            } else {
+                sessionStorage.setItem('msg', 'false');
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
+    // Function for Staff, allocation and specialization details
+    async function onSend(bmaster_id, cat_id) {
 
         setInputs({...inputs, 
             bmaster_id: bmaster_id,
-            stat: stat
+            cat_id: cat_id
         });
+
+        try {
+
+            const response = await fetch("http://localhost:5000/dashboard/staffspec", {
+                method: "GET",
+                headers: {token: localStorage.token, cat_id: cat_id}
+            });
+
+            const parseRes = await response.json();
+
+            setStaff(parseRes);
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
     }
 
     // function to calculate tomorrow's date
@@ -101,32 +153,6 @@ const CustomerWorkPending = () => {
         var yyyy = today.getFullYear();
 
         setDate(dd + '/' + mm + '/' + yyyy);
-    }
-
-    // function to set cancel button
-    function CancelButton(props) {
-
-        if (props.date <= todaydate) {
-            if (props.status == 'work_pending') {
-
-                const stat = "no_refund";
-
-                return (
-                
-                    <td className="text-center">
-                        <button className="btn btn-danger" onClick={() => onCancel(props.bmaster_id, stat)} title="Cancel Booking" data-bs-toggle="modal" data-bs-target="#cancelbook">Cancel</button>
-                        <p className="text-danger"> <small><Info className="mt-n1 mx-1" />Refund Not Possible!</small></p>
-                    </td>
-                );
-            }
-        }
-
-        const stat = "refund";
-
-        return (
-        
-            <td className="text-center"><button className="btn btn-danger mx-3" onClick={() => onCancel(props.bmaster_id, stat)} title="Cancel Booking" data-bs-toggle="modal" data-bs-target="#cancelbook">Cancel</button></td>
-        );
     }
 
     // Date format function
@@ -141,6 +167,13 @@ const CustomerWorkPending = () => {
             
             if(sessionStorage.getItem("msg") === 'cancel'){
                 toast.success("Cancellation Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");                
+            }
+
+            else if(sessionStorage.getItem("msg") === 'alloc'){
+                toast.success("Allocation Successful!",{
                     position: toast.POSITION.BOTTOM_RIGHT
                 });
                 sessionStorage.removeItem("msg");                
@@ -166,17 +199,21 @@ const CustomerWorkPending = () => {
                     <div className="card border-secondary">
                         <div className="card-header">
                             <ul className="nav nav-pills card-header-pills">
+
                                 <li className="nav-item">
-                                    <a className="nav-link active button" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("alloc pending")} aria-current="true" href="#">Allocation Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
+                                    <a className="nav-link active button mx-2" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
+                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link text-dark button" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
                                 </li>
                             </ul>
                         </div>
@@ -190,11 +227,13 @@ const CustomerWorkPending = () => {
                                         
                                         <tr key={item.bmaster_id} className="list-group-item">
 
-                                            <td scope="row">
+                                            <td scope="row" className="col-2">
                                                 <p>Booking ID: {item.bmaster_id}</p>
+                                                <p>{item.c_fname}{item.c_lname}</p>
+                                                <p>{item.c_phno}</p>
                                             </td>
 
-                                            <td className="col-3">
+                                            <td className="col-2">
                                                 <img className="img mt-3" src={`${serverBaseURI}/images/${item.cat_image}`}/>
                                                 <p className="mt-2">{item.cat_name}</p>
                                             </td>
@@ -212,13 +251,51 @@ const CustomerWorkPending = () => {
                                                 <p>Time Of Visit: {item.bc_time}</p>
                                                 <p>Date Of Visit: {formatDate(item.bc_date)}</p>
                                             </td>
-
-                                            <CancelButton date={formatDate(item.bc_date)} status={item.bm_status} bmaster_id={item.bmaster_id} />
+                                            <td className="text-center">
+                                                <p>Allocated Staff: {item.s_fname} {item.s_lname}</p>
+                                                <button className="btn btn-primary mx-1" onClick={() => onSend(item.bmaster_id, item.cat_id)} title="Allocate Staff" data-bs-toggle="modal" data-bs-target="#alloc">Reallocate</button>
+                                            </td>
                                         </tr>
                                         ))
                                     }
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    {/* Staff Allocation Modal */}
+                    <div className="modal fade" id="alloc" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
+                        <div className="modal-dialog modal-dialog-centered modal-lg">
+
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title" id="staticBackdropLabel">Reallocate Staff</h5>
+                                    <button type="button" onClick={e => (document.getElementById("newcatform").reset())} className="btn-close" data-bs-dismiss="modal" ></button>
+                                </div>
+
+                                <form onSubmit={onSubmitStaff} className=" row g-3 needs-validation mx-3" encType="multipart/form-data">
+                                    <div className="modal-body d-flex flex-column align-items-center">
+
+                                        <div className=" col-md-8 mb-3">
+                                                <label  className="form-label">Qualified Staff Members</label>
+                                                <select className="form-select" name="staff_id" onChange={e => onChange(e)} id="inputGroupSelect01" required>
+                                                    <option selected hidden disabled>Choose...</option>
+                                                    {
+                                                        staff.map((item, index) => (
+
+                                                            <option key={item.staff_id} value={item.staff_id}>{item.s_fname} {item.s_lname}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                        </div>
+
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button className="btn btn-dark">Allocate</button>
+                                    </div>
+                                </form>
+                            </div>
+
                         </div>
                     </div>
 
@@ -254,4 +331,4 @@ const CustomerWorkPending = () => {
     )
 };
 
-export default CustomerWorkPending;
+export default WorkPending;

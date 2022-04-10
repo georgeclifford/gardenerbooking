@@ -1,11 +1,12 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 
-const CustomerCancelledBooking = () => {
+const PrevBooking = () => {
 
     const [data, setData] = useState([]);
 
     const serverBaseURI = 'http://localhost:5000'
+
 
     // function to set tab
     function setTab(tab){
@@ -15,13 +16,14 @@ const CustomerCancelledBooking = () => {
 
     }
 
-    // Function for fetching cancelled bookings details
+
+    // Function for fetching completed work details
     async function getDetails() {
         try {
 
-            const response = await fetch("http://localhost:5000/dashboard/cancelled", {
+            const response = await fetch("http://localhost:5000/dashboard/admincompletedwork", {
                 method: "GET",
-                headers: {token: localStorage.token, user_id: localStorage.user_id}
+                headers: {token: localStorage.token}
             });
 
             const parseRes = await response.json();
@@ -33,35 +35,6 @@ const CustomerCancelledBooking = () => {
             console.error(err.message);
             
         }
-    }
-
-     // function to set cancel button
-     function CancelMsg(props) {
-
-        if (props.status == 'paid') {
-
-                return (
-                
-                    <td className="col-2">
-                        <p>Booking Cancelled!</p>
-                        <p className="text-danger">Payment Was Not Refunded!</p>
-                        <p>Reason: {props.reason}</p>
-                    </td>
-                );
-        }
-
-       else if(props.status == 'refunded'){
-
-            return (
-            
-                <td className="col-2">
-                    <p>Booking Cancelled!</p>
-                    <p className="text-success">Payment Refunded!</p>
-                    <p>Reason: {props.reason}</p>
-                </td>
-            );
-
-       }
     }
 
     // Date format function
@@ -78,45 +51,48 @@ const CustomerCancelledBooking = () => {
 
     return (
         <Fragment>
-
                     <div className="card border-secondary">
                         <div className="card-header">
                             <ul className="nav nav-pills card-header-pills">
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("alloc pending")} aria-current="true" href="#">Allocation Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
+                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link active button mx-2" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
+                                    <a className="nav-link active button mx-2" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link text-dark button" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
                                 </li>
                             </ul>
                         </div>
-
                         <div>
                             <table>
 
-                                <tbody>
+                            <tbody>
                                     {
                                     data.map((item, index) => (
                                         
                                         <tr key={item.bmaster_id} className="list-group-item">
 
-                                            <td scope="row">
-                                                <p>Bookin ID: {item.bmaster_id}</p>
+                                            <td scope="row" className="col-2">
+                                                <p>Booking ID: {item.bmaster_id}</p>
+                                                <p>{item.c_fname}{item.c_lname}</p>
+                                                <p>{item.c_phno}</p>
                                             </td>
 
-                                            <td className="col-3">
+                                            <td className="col-2">
                                                 <img className="img mt-3" src={`${serverBaseURI}/images/${item.cat_image}`}/>
                                                 <p className="mt-2">{item.cat_name}</p>
                                             </td>
 
-                                            <td>
-                                                <p>Advance Paid: Rs. {item.tot_amt}</p>
+                                            <td className="col-2">
+                                                <p>Advance Paid: Rs. {item.tot_amt / item.bc_hours}</p>
                                                 <p>Date Of Booking: {formatDate(item.bm_date)}</p>
                                             </td>
 
@@ -124,13 +100,20 @@ const CustomerCancelledBooking = () => {
                                                 <p>Address Of Visit:</p> 
                                                 <p> {item.bc_name}, {item.bc_house}, {item.bc_street}, {item.bc_dist}, {item.bc_pin}, {item.bc_phone}</p>
                                             </td>
-
-                                            <td>
+                                            <td className="col-2">
                                                 <p>Time Of Visit: {item.bc_time}</p>
                                                 <p>Date Of Visit: {formatDate(item.bc_date)}</p>
                                             </td>
 
-                                            <CancelMsg status={item.pay_status} reason={item.bm_reason}/>
+                                            <td className="col-2">
+                                                <p>Hours Worked: {item.bc_hours}</p>
+                                                <p>Total Amount Paid: Rs. {item.tot_amt}</p>
+                                            </td>
+
+                                            <td>
+                                                <p>Allocated Staff: {item.s_fname} {item.s_lname}</p>
+                                            </td>
+
                                         </tr>
                                         ))
                                     }
@@ -143,4 +126,4 @@ const CustomerCancelledBooking = () => {
     )
 };
 
-export default CustomerCancelledBooking;
+export default PrevBooking;

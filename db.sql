@@ -97,6 +97,22 @@ FOREIGN KEY (bmaster_id) REFERENCES tbl_bookingmaster (bmaster_id),
 FOREIGN KEY (cat_id) REFERENCES tbl_category (cat_id)
 )
 
+CREATE TABLE tbl_allocmaster(
+am_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+staff_id integer NOT NULL,
+FOREIGN KEY (staff_id) REFERENCES tbl_staff (staff_id)
+)
+
+CREATE TABLE tbl_allocchild(
+ac_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+am_id integer NOT NULL,
+bmaster_id integer NOT NULL,
+ac_status varchar(15) NOT NULL,
+FOREIGN KEY (am_id) REFERENCES tbl_allocmaster (am_id),
+FOREIGN KEY (bmaster_id) REFERENCES tbl_bookingmaster (bmaster_id)
+)
+
+
 CREATE TABLE tbl_payment(
 pay_id integer NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 bmaster_id integer NOT NULL,

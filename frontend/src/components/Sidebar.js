@@ -63,6 +63,7 @@ const Sidebar = (props) => {
     // Logout Funtion
     const logout = (e) =>{
       e.preventDefault();
+      sessionStorage.removeItem("tab");
       localStorage.removeItem("token");
       props.setAuth(false);
       toast.success("Successfully Logged Out!",{
@@ -129,17 +130,6 @@ const Sidebar = (props) => {
                                         :
                                         <Link to="/bookings" className="nav-link text-white button">
                                         <Book className="mx-1 mt-n1" /> Bookings
-                                        </Link>
-                                    }
-                                </li>
-                                <li>
-                                    { isActive === "reports" ? 
-                                        <Link to="/reports" className="nav-link active button">
-                                        <Report className="mx-1 mt-n1" /> Report
-                                        </Link>
-                                        :
-                                        <Link to="/reports" className="nav-link text-white button">
-                                        <Report className="mx-1 mt-n1" /> Report
                                         </Link>
                                     }
                                 </li>
@@ -223,17 +213,7 @@ const Sidebar = (props) => {
                                         </Link>
                                     }
                                 </li>
-                                <li>
-                                    { isActive === "feedbacks" ? 
-                                        <Link to="/feedbacks" className="nav-link active button">
-                                        <Feedback className="mx-1 mt-n1" /> Feedbacks
-                                        </Link>
-                                        :
-                                        <Link to="/feedbacks" className="nav-link text-white button">
-                                        <Feedback className="mx-1 mt-n1" /> Feedbacks
-                                        </Link>
-                                    }
-                                </li>
+                            
                             </ul>
 
                             :

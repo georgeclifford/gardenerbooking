@@ -1,7 +1,7 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 
-const CustomerCancelledBooking = () => {
+const CancelledBooking = () => {
 
     const [data, setData] = useState([]);
 
@@ -19,9 +19,9 @@ const CustomerCancelledBooking = () => {
     async function getDetails() {
         try {
 
-            const response = await fetch("http://localhost:5000/dashboard/cancelled", {
+            const response = await fetch("http://localhost:5000/dashboard/admincancelled", {
                 method: "GET",
-                headers: {token: localStorage.token, user_id: localStorage.user_id}
+                headers: {token: localStorage.token}
             });
 
             const parseRes = await response.json();
@@ -83,16 +83,19 @@ const CustomerCancelledBooking = () => {
                         <div className="card-header">
                             <ul className="nav nav-pills card-header-pills">
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("alloc pending")} aria-current="true" href="#">Allocation Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
+                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link active button mx-2" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
+                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link active button" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
                                 </li>
                             </ul>
                         </div>
@@ -106,11 +109,13 @@ const CustomerCancelledBooking = () => {
                                         
                                         <tr key={item.bmaster_id} className="list-group-item">
 
-                                            <td scope="row">
-                                                <p>Bookin ID: {item.bmaster_id}</p>
+                                            <td scope="row" className="col-2">
+                                                <p>Booking ID: {item.bmaster_id}</p>
+                                                <p>{item.c_fname}{item.c_lname}</p>
+                                                <p>{item.c_phno}</p>
                                             </td>
 
-                                            <td className="col-3">
+                                            <td className="col-2">
                                                 <img className="img mt-3" src={`${serverBaseURI}/images/${item.cat_image}`}/>
                                                 <p className="mt-2">{item.cat_name}</p>
                                             </td>
@@ -143,4 +148,4 @@ const CustomerCancelledBooking = () => {
     )
 };
 
-export default CustomerCancelledBooking;
+export default CancelledBooking;

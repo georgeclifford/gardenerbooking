@@ -24,10 +24,8 @@ import CustomerBookings from './components/CustomerBookings';
 import CustomerList from './components/CustomerList';
 import Category from './components/Category';
 import Bookings from './components/Bookings';
-import Reports from './components/Reports';
 import Specializations from './components/Specializations';
 import Allocations from './components/Allocations';
-import Feedbacks from './components/Feedbacks';
 
 toast.configure();
 
@@ -80,10 +78,8 @@ function App() {
             <Route exact path="/customerlist" element = { isAuthenticated ? ( <CustomerList setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/category" element = { isAuthenticated ? ( <Category setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/bookings" element = { isAuthenticated ? ( <Bookings setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
-            <Route exact path="/reports" element = { isAuthenticated ? ( <Reports setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/specializations" element = { isAuthenticated ? ( <Specializations setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/allocations" element = { isAuthenticated ? ( <Allocations setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
-            <Route exact path="/feedbacks" element = { isAuthenticated ? ( <Feedbacks setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
           </Routes>
         <Footer />
       </Router>

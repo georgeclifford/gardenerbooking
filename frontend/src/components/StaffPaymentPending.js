@@ -1,8 +1,8 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
 
-const CustomerCancelledBooking = () => {
-
+const StaffPaymentPending = () => {
+    
     const [data, setData] = useState([]);
 
     const serverBaseURI = 'http://localhost:5000'
@@ -15,11 +15,11 @@ const CustomerCancelledBooking = () => {
 
     }
 
-    // Function for fetching cancelled bookings details
+    // Function for fetching payment pending details
     async function getDetails() {
         try {
 
-            const response = await fetch("http://localhost:5000/dashboard/cancelled", {
+            const response = await fetch("http://localhost:5000/dashboard/staffpaymentpending", {
                 method: "GET",
                 headers: {token: localStorage.token, user_id: localStorage.user_id}
             });
@@ -35,34 +35,6 @@ const CustomerCancelledBooking = () => {
         }
     }
 
-     // function to set cancel button
-     function CancelMsg(props) {
-
-        if (props.status == 'paid') {
-
-                return (
-                
-                    <td className="col-2">
-                        <p>Booking Cancelled!</p>
-                        <p className="text-danger">Payment Was Not Refunded!</p>
-                        <p>Reason: {props.reason}</p>
-                    </td>
-                );
-        }
-
-       else if(props.status == 'refunded'){
-
-            return (
-            
-                <td className="col-2">
-                    <p>Booking Cancelled!</p>
-                    <p className="text-success">Payment Refunded!</p>
-                    <p>Reason: {props.reason}</p>
-                </td>
-            );
-
-       }
-    }
 
     // Date format function
     function formatDate(stringDate){
@@ -72,27 +44,48 @@ const CustomerCancelledBooking = () => {
 
     useEffect(() => {
 
+        if (sessionStorage.getItem("msg")) {
+            if(sessionStorage.getItem("msg") === 'cancel'){
+                toast.success("Cancellation Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");                
+            }
+            
+            else if(sessionStorage.getItem("msg") === 'update'){
+                toast.success("Payment Successful!",{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg"); 
+            }
+            else{
+                toast.error(sessionStorage.getItem("msg"),{
+                    position: toast.POSITION.BOTTOM_RIGHT
+                });
+                sessionStorage.removeItem("msg");
+                
+            }
+
+        }
+
         getDetails();
 
     }, [0]);
 
     return (
         <Fragment>
-
                     <div className="card border-secondary">
                         <div className="card-header">
                             <ul className="nav nav-pills card-header-pills">
+
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
+                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
+                                    <a className="nav-link active button" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link active button mx-2" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
+                                    <a className="nav-link text-dark button mx-2" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
                                 </li>
                             </ul>
                         </div>
@@ -106,11 +99,13 @@ const CustomerCancelledBooking = () => {
                                         
                                         <tr key={item.bmaster_id} className="list-group-item">
 
-                                            <td scope="row">
-                                                <p>Bookin ID: {item.bmaster_id}</p>
+                                            <td scope="row" className="col-2">
+                                                <p>Booking ID: {item.bmaster_id}</p>
+                                                <p>{item.c_fname}{item.c_lname}</p>
+                                                <p>{item.c_phno}</p>
                                             </td>
 
-                                            <td className="col-3">
+                                            <td className="col-2">
                                                 <img className="img mt-3" src={`${serverBaseURI}/images/${item.cat_image}`}/>
                                                 <p className="mt-2">{item.cat_name}</p>
                                             </td>
@@ -124,13 +119,20 @@ const CustomerCancelledBooking = () => {
                                                 <p>Address Of Visit:</p> 
                                                 <p> {item.bc_name}, {item.bc_house}, {item.bc_street}, {item.bc_dist}, {item.bc_pin}, {item.bc_phone}</p>
                                             </td>
-
                                             <td>
                                                 <p>Time Of Visit: {item.bc_time}</p>
                                                 <p>Date Of Visit: {formatDate(item.bc_date)}</p>
                                             </td>
 
-                                            <CancelMsg status={item.pay_status} reason={item.bm_reason}/>
+                                            <td className="col-2">
+                                                <p>Hours Worked: {item.bc_hours}</p>
+                                                <p>Amount To Be Paid: Rs. {item.tot_amt * (item.bc_hours - 1)}</p>
+                                            </td>
+
+                                            <td>
+                                                <p>Allocated Staff: {item.s_fname} {item.s_lname}</p>
+                                            </td>
+
                                         </tr>
                                         ))
                                     }
@@ -138,9 +140,9 @@ const CustomerCancelledBooking = () => {
                             </table>
                         </div>
                     </div>
-
+    
         </Fragment>
     )
 };
 
-export default CustomerCancelledBooking;
+export default StaffPaymentPending;

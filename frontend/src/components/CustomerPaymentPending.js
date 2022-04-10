@@ -164,10 +164,10 @@ const CustomerPaymentPending = () => {
                                     <a className="nav-link text-dark button" onClick={() => setTab("work pending")} aria-current="true" href="#">Work Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link active button mx-2" onClick={() => setTab("payment pending")} href="#">Work Completed / Payment Pending</a>
+                                    <a className="nav-link active button mx-2" onClick={() => setTab("payment pending")} href="#">Payment Pending</a>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link text-dark button" onClick={() => setTab("prev work")} href="#">Previous Completed Works</a>
+                                    <a className="nav-link text-dark button" onClick={() => setTab("prev work")} href="#">Completed & Paid Works</a>
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link text-dark button mx-2" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>

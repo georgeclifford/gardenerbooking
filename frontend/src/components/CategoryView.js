@@ -36,6 +36,8 @@ const CategoryView = ({isLoggedin}) => {
         card_id: ""
       });
 
+      const [stat, setStat] = useState("possible");
+
       const { cat_id,cat_name,cat_desc,cat_price,cat_status,cat_image, bc_time, bc_date, name,house,street,dist,pin,phno,card_id} = inputs;
 
       const onChange = (e) => {
@@ -120,6 +122,29 @@ const CategoryView = ({isLoggedin}) => {
         }
     }
 
+    // Function for fetching card details
+    async function getStaffDetails() {
+
+        try {
+            
+            const response = await fetch("http://localhost:5000/dashboard/freestaff", {
+                method: "GET",
+                headers: {token: localStorage.token}
+            });
+
+            const parseRes = await response.json();
+
+            if(parseRes.length == 0){
+                setStat("not possible");
+            }
+
+        } catch (err) {
+
+            console.error(err.message);
+            
+        }
+    }
+
     // New Booking function
     const onSubmitForm = async(e) => {
 
@@ -155,8 +180,20 @@ const CategoryView = ({isLoggedin}) => {
 
         if (isLoggedin) {
             if (user_type === "customer") {
+                if (stat === "possible") {
+                
             
-                return <button className="btn btn-primary col-4" title="Make Booking" data-bs-toggle="modal" data-bs-target="#bookcat"><Book className="mt-n1 mx-1" /> Book Now</button>
+                    return <button className="btn btn-primary col-4" title="Make Booking" data-bs-toggle="modal" data-bs-target="#bookcat"><Book className="mt-n1 mx-1" /> Book Now</button>
+                }
+
+                else{
+                    return (
+                        <div>
+                            <button className="btn btn-primary col-4 disabled" title="Make Booking"><Book className="mt-n1 mx-1" /> Book Now</button>
+                            <p className="text-danger"> <small><Info className="mt-n1 mx-1" />Booking Not Possible At The Moment!</small></p>
+                        </div>
+                    );
+                }
 
             }
         }
@@ -228,6 +265,7 @@ const CategoryView = ({isLoggedin}) => {
         }
 
         getUser();
+        getStaffDetails();
         getCategoryDetails();
         getCardDetails();
         

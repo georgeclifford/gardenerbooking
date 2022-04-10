@@ -78,6 +78,23 @@ router.get("/staffdetails", authorization, async(req, res) => {
     }
 });
 
+//Staff details for checking
+router.get("/freestaff", authorization, async(req, res) => {
+    try {
+
+        const user = await pool.query("SELECT * FROM tbl_staff s, tbl_allocmaster am WHERE s.staff_id = am.staff_id AND am.am_id NOT IN (SELECT am_id FROM tbl_allocchild WHERE ac_status = 'allocated')");
+
+        return res.json(user.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 // Card details fetching
 router.get("/carddetails", authorization, async(req, res) => {
     try {
@@ -273,6 +290,184 @@ router.get("/cancelled", authorization, async(req, res) => {
     }
 });
 
+// allocation pending details fetching for admin
+router.get("/adminallocpending", authorization, async(req, res) => {
+    try {
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust WHERE m.cust_id=cust.cust_id AND m.bm_status = 'alloc_pending' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id",);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// work pending details fetching for admin
+router.get("/adminworkpending", authorization, async(req, res) => {
+    try {
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'allocated' AND m.cust_id=cust.cust_id AND m.bm_status = 'work_pending' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id",);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// payment pending details fetching for admin
+router.get("/adminpaymentpending", authorization, async(req, res) => {
+    try {
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'pay_pending' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", );
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// completed work details fetching for admin
+router.get("/admincompletedwork", authorization, async(req, res) => {
+    try {
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", );
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
+// cancelled booking details fetching for admin
+router.get("/admincancelled", authorization, async(req, res) => {
+    try {
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_payment p, tbl_customer cust WHERE m.cust_id=cust.cust_id AND m.bm_status = 'cancelled' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id AND m.bmaster_id = p.bmaster_id ORDER BY m.bmaster_id DESC",);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+//Staff specialization details fetching for allocation
+router.get("/staffspec", authorization, async(req, res) => {
+    try {
+
+        let cat_id='';
+
+        cat_id = req.header("cat_id");
+
+        const details = await pool.query("SELECT * FROM tbl_staff s, tbl_specmaster sm, tbl_specchild sc, tbl_allocmaster am WHERE s.staff_id = sm.staff_id AND sc.sm_id = sm.sm_id AND sc.cat_id = $1 AND sc_status = 'active' AND am.staff_id = s.staff_id AND am.am_id NOT IN ( SELECT am_id FROM tbl_allocchild WHERE ac_status = 'allocated')", [cat_id]);
+
+        return res.json(details.rows);
+        
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+
+// work pending details fetching for staff
+router.get("/staffworkpending", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const staff = await pool.query("SELECT staff_id FROM tbl_staff WHERE user_id = $1 ", [user_id]);
+
+        staff_id = staff.rows[0].staff_id;
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = $1 AND s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'allocated' AND m.cust_id=cust.cust_id AND m.bm_status = 'work_pending' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id",
+        [staff_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// payment pending details fetching for staff
+router.get("/staffpaymentpending", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const staff = await pool.query("SELECT staff_id FROM tbl_staff WHERE user_id = $1 ", [user_id]);
+
+        staff_id = staff.rows[0].staff_id;
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = $1 AND s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'pay_pending' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC",
+        [staff_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// completed work details fetching for staff
+router.get("/staffcompletedwork", authorization, async(req, res) => {
+    try {
+
+        let user_id='';
+
+        user_id = req.header("user_id");
+
+        const staff = await pool.query("SELECT staff_id FROM tbl_staff WHERE user_id = $1 ", [user_id]);
+
+        staff_id = staff.rows[0].staff_id;
+
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = $1 AND s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", 
+        [staff_id]);
+
+        return res.json(details.rows);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 
 // NEW ADDITIONS
 
@@ -308,7 +503,10 @@ router.post("/addstaff", authorization, async(req, res) => {
         const newStaff = await pool.query("INSERT INTO tbl_staff (s_phno, user_id, s_fname, s_lname, s_house, s_street, s_dist, s_pin, s_date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *",
         [phno, uid, fname, lname, house, street, dist, pin, dt]);
 
-        if(newStaff.rows.length === 0){
+        const newAllocMaster = await pool.query("INSERT INTO tbl_allocmaster (staff_id) VALUES ($1) RETURNING *",
+        [newStaff.rows[0].staff_id]);
+
+        if(newAllocMaster.rows.length === 0){
             return res.status(401).json("Couldn't Add Staff!");
         }
 
@@ -509,6 +707,36 @@ router.post("/newbooking", authorization, async(req, res) => {
     }
 });
 
+// New allocation
+router.post("/staffalloc", authorization, async(req, res) => {
+    try {
+
+        const {bmaster_id,staff_id} = req.body;
+
+        const allocMaster = await pool.query("SELECT am_id FROM tbl_allocmaster WHERE staff_id = $1", [staff_id]);
+
+        const am_id = allocMaster.rows[0].am_id;
+
+        const newAlloc = await pool.query("INSERT INTO tbl_allocchild (am_id, bmaster_id, ac_status) VALUES ($1, $2, 'allocated') RETURNING *",
+        [am_id, bmaster_id]);
+
+        if(newAlloc.rows.length === 0){
+            return res.status(401).json("Couldn't Allocate Staff!");
+        }
+
+        const updatebmaster = await pool.query("UPDATE tbl_bookingmaster SET bm_status='work_pending' WHERE bmaster_id=$1 RETURNING *",
+        [bmaster_id]);
+
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
 
 // EDITS/UPDATES
 
@@ -643,6 +871,61 @@ router.post("/bookingpay", authorization, async(req, res) => {
             if(newFeedback.rows.length === 0){
                 return res.status(401).json("Updation Failed!");
             }
+
+            return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// Staff editting for admin
+router.post("/editalloc", authorization, async(req, res) => {
+    try {
+
+        const {bmaster_id,staff_id} = req.body;
+
+        const updateAlloc = await pool.query("UPDATE tbl_allocchild SET ac_status='reallocated' WHERE bmaster_id=$1 RETURNING *",
+        [bmaster_id]);
+
+        const allocMaster = await pool.query("SELECT am_id FROM tbl_allocmaster WHERE staff_id = $1", [staff_id]);
+
+        const am_id = allocMaster.rows[0].am_id;
+        
+        const newAlloc = await pool.query("INSERT INTO tbl_allocchild (am_id, bmaster_id, ac_status) VALUES ($1, $2, 'allocated') RETURNING *",
+        [am_id, bmaster_id]);
+
+        if(newAlloc.rows.length === 0){
+            return res.status(401).json("Couldn't Reallocate Staff!");
+        }
+
+        return res.json(true);
+
+    } catch (err) {
+
+        console.error(err.message);
+        return res.status(500).json("Server Error!");
+        
+    }
+});
+
+// work updation
+router.post("/workupdate", authorization, async(req, res) => {
+    try {
+
+        const {bmaster_id,bc_hours} = req.body;
+
+            const updatebmaster = await pool.query("UPDATE tbl_bookingmaster SET bm_status='pay_pending' WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id]);
+
+            const updatebchild = await pool.query("UPDATE tbl_bookingchild SET bc_hours=$1 WHERE bmaster_id=$2 RETURNING *",
+            [bc_hours, bmaster_id]);
+
+            const updatealloc = await pool.query("UPDATE tbl_allocchild SET ac_status='work_done' WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id]);
 
             return res.json(true);
 
@@ -898,6 +1181,9 @@ router.post("/cancelbooking", authorization, async(req, res) => {
             const updatebooking = await pool.query("UPDATE tbl_bookingmaster SET bm_status='cancelled', bm_reason=$2 WHERE bmaster_id=$1 RETURNING *",
             [bmaster_id,bm_reason]);
 
+            const updatealloc = await pool.query("UPDATE tbl_allocchild SET ac_status='cancelled' WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id]);
+
             return res.json(true);
         }
 
@@ -907,6 +1193,9 @@ router.post("/cancelbooking", authorization, async(req, res) => {
             [bmaster_id,bm_reason]);
 
             const updatepayment = await pool.query("UPDATE tbl_payment SET pay_status='refunded' WHERE bmaster_id=$1 RETURNING *",
+            [bmaster_id]);
+
+            const updatealloc = await pool.query("UPDATE tbl_allocchild SET ac_status='cancelled' WHERE bmaster_id=$1 RETURNING *",
             [bmaster_id]);
 
             return res.json(true);
