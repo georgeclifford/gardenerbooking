@@ -205,11 +205,11 @@ const Sidebar = (props) => {
                                 <li>
                                     { isActive === "allocations" ? 
                                         <Link to="/allocations" className="nav-link active button">
-                                        <Work className="mx-1 mt-n1" /> Allocations
+                                        <Work className="mx-1 mt-n1" /> Allocations & Works
                                         </Link>
                                         :
                                         <Link to="/allocations" className="nav-link text-white button">
-                                        <Work className="mx-1 mt-n1" /> Allocations
+                                        <Work className="mx-1 mt-n1" /> Allocations & Works
                                         </Link>
                                     }
                                 </li>

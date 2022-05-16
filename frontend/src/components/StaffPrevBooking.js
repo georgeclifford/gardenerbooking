@@ -103,6 +103,7 @@ const StaffPrevBooking = () => {
                                             <td className="col-2">
                                                 <p>Hours Worked: {item.bc_hours}</p>
                                                 <p>Total Amount Paid: Rs. {item.tot_amt}</p>
+                                                <p>Feedback: {item.feedback}</p>
                                             </td>
 
                                             <td>

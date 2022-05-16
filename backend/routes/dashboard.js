@@ -255,7 +255,7 @@ router.get("/completedwork", authorization, async(req, res) => {
 
         const cust = await pool.query("SELECT cust_id FROM tbl_customer WHERE user_id = $1 ", [user_id]);
 
-        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat WHERE m.cust_id = $1 AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", [cust.rows[0].cust_id]);
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_feedback f WHERE m.cust_id = $1 AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id AND m.bmaster_id = f.bmaster_id ORDER BY m.bmaster_id DESC", [cust.rows[0].cust_id]);
 
         return res.json(details.rows);
 
@@ -342,7 +342,7 @@ router.get("/adminpaymentpending", authorization, async(req, res) => {
 router.get("/admincompletedwork", authorization, async(req, res) => {
     try {
 
-        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", );
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac, tbl_feedback f WHERE s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND m.bmaster_id = f.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", );
 
         return res.json(details.rows);
 
@@ -455,7 +455,7 @@ router.get("/staffcompletedwork", authorization, async(req, res) => {
 
         staff_id = staff.rows[0].staff_id;
 
-        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac WHERE s.staff_id = $1 AND s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", 
+        const details = await pool.query("SELECT * FROM tbl_bookingmaster m, tbl_bookingchild c, tbl_category cat, tbl_customer cust, tbl_staff s, tbl_allocmaster am, tbl_allocchild ac, tbl_feedback f WHERE s.staff_id = $1 AND s.staff_id = am.staff_id AND am.am_id = ac.am_id AND ac.bmaster_id = m.bmaster_id AND ac.ac_status = 'work_done' AND m.cust_id=cust.cust_id AND m.bmaster_id = f.bmaster_id AND m.bm_status = 'completed' AND m.bmaster_id = c.bmaster_id AND c.cat_id = cat.cat_id ORDER BY m.bmaster_id DESC", 
         [staff_id]);
 
         return res.json(details.rows);

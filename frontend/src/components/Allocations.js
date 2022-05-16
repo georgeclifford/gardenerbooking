@@ -43,7 +43,7 @@ const Allocations = ({setAuth}) => {
             <div className="d-flex">
                 <Sidebar setAuth={setAuth} isActive={isActive} />
                 <div className="pad1 col-lg-8 col-md-8 col-sm-8 mx-auto">
-                    <h1 className="mb-5 text-center">Allocations</h1>
+                    <h1 className="mb-5 text-center">Allocations & Works</h1>
                     <TabDisplay />
                     
                 </div>
