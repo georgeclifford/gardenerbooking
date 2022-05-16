@@ -1,5 +1,8 @@
 import React, {Fragment, useState, useEffect} from "react";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+
+import { ReactComponent as Pdf} from "bootstrap-icons/icons/file-earmark-pdf-fill.svg";
 
 const WorkPending = () => {
 
@@ -215,6 +218,16 @@ const WorkPending = () => {
                                 <li className="nav-item">
                                     <a className="nav-link text-dark button" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
                                 </li>
+                                <li className="nav-item">
+                                    <Link class="nav-link text-dark button mx-2" type="button" to={{
+                                            pathname: "/print",
+                                            search: `?type=workpending`,
+                                        }} title="Download As PDF">
+                                            
+                                            <Pdf className="mt-n1" />
+
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
 
@@ -261,6 +274,12 @@ const WorkPending = () => {
                                 </tbody>
                             </table>
                         </div>
+                        {
+                            data.length == 0 ?
+                                <p className="text-muted text-center p-5">Nothing Yet!</p>
+                        :
+                            <p className="visually-hidden"></p>
+                        }
                     </div>
 
                     {/* Staff Allocation Modal */}

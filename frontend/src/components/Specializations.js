@@ -204,6 +204,12 @@ const Specializations = ({setAuth}) => {
                         }
                         </tbody>
                     </Table>
+                    {
+                        spec.length == 0 ?
+                            <p className="text-muted text-center p-5">Nothing Yet!</p>
+                        :
+                            <p className="visually-hidden"></p>
+                    }
 
                     {/* New Spec Modal */}
                     <div className="modal fade" id="newspec" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">

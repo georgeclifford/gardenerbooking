@@ -111,6 +111,12 @@ const CustomerPrevBooking = () => {
                                     }
                                 </tbody>
                             </table>
+                            {
+                                data.length == 0 ?
+                                    <p className="text-muted text-center p-5">Nothing Yet!</p>
+                                :
+                                    <p className="visually-hidden"></p>
+                            }
                         </div>
                     </div>
 

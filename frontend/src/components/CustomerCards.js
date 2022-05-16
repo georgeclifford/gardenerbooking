@@ -224,6 +224,13 @@ const CustomerCards = ({setAuth}) => {
                         </tbody>
                     </Table>
 
+                    {
+                        data.length == 0 ?
+                            <p className="text-muted text-center p-5">Nothing Yet!</p>
+                        :
+                            <p className="visually-hidden"></p>
+                    }
+
                     {/* New Card Modal */}
                     <div className="modal fade" id="newcard" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1">
                         <div className="modal-dialog modal-dialog-centered modal-lg">

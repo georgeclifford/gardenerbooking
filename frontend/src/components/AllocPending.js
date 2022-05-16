@@ -1,7 +1,9 @@
 import React, {Fragment, useState, useEffect} from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ReactComponent as Info} from "bootstrap-icons/icons/info-circle.svg";
+import { ReactComponent as Pdf} from "bootstrap-icons/icons/file-earmark-pdf-fill.svg";
 
 const AllocPending = () => {
 
@@ -169,7 +171,7 @@ const AllocPending = () => {
     // function to set cancel button
     function Button(props) {
 
-        if (props.date <= todaydate) {
+        if (props.date >= todaydate) {
             if (props.status == 'alloc_pending') {
 
                 const stat = "refund";
@@ -256,6 +258,16 @@ const AllocPending = () => {
                                 <li className="nav-item">
                                     <a className="nav-link text-dark button" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
                                 </li>
+                                <li className="nav-item">
+                                    <Link class="nav-link text-dark button mx-2" type="button" to={{
+                                            pathname: "/print",
+                                            search: `?type=allocpending`,
+                                        }} title="Download As PDF">
+                                            
+                                            <Pdf className="mt-n1" />
+
+                                    </Link>
+                                </li>
                             </ul>
                         </div>
 
@@ -263,7 +275,8 @@ const AllocPending = () => {
                             <table>
 
                                 <tbody>
-                                    {
+                                {
+                    
                                     data.map((item, index) => (
                                         
                                         <tr key={item.bmaster_id} className="list-group-item">
@@ -293,10 +306,6 @@ const AllocPending = () => {
                                                 <p>Date Of Visit: {formatDate(item.bc_date)}</p>
                                             </td>
 
-                                            <td>
-                                                
-                                            </td>
-
                                             <Button date={formatDate(item.bc_date)} status={item.bm_status} cat_id={item.cat_id} bmaster_id={item.bmaster_id} />
                                         </tr>
                                         ))
@@ -304,6 +313,12 @@ const AllocPending = () => {
                                 </tbody>
                             </table>
                         </div>
+                        {
+                            data.length == 0 ?
+                                <p className="text-muted text-center p-5">Nothing Yet!</p>
+                        :
+                            <p className="visually-hidden"></p>
+                        }
                     </div>
 
                     {/* Staff Allocation Modal */}

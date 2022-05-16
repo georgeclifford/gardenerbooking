@@ -24,6 +24,7 @@ import CustomerBookings from './components/CustomerBookings';
 import CustomerList from './components/CustomerList';
 import Category from './components/Category';
 import Bookings from './components/Bookings';
+import Print from './components/Print';
 import Specializations from './components/Specializations';
 import Allocations from './components/Allocations';
 
@@ -78,6 +79,7 @@ function App() {
             <Route exact path="/customerlist" element = { isAuthenticated ? ( <CustomerList setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/category" element = { isAuthenticated ? ( <Category setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/bookings" element = { isAuthenticated ? ( <Bookings setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
+            <Route exact path="/print" element = { isAuthenticated ? ( <Print setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/specializations" element = { isAuthenticated ? ( <Specializations setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
             <Route exact path="/allocations" element = { isAuthenticated ? ( <Allocations setAuth = {setAuth} /> ) : ( <Login setAuth = {setAuth} /> )} />
           </Routes>

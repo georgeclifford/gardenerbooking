@@ -220,6 +220,12 @@ const CustomerWorkPending = () => {
                                 </tbody>
                             </table>
                         </div>
+                        {
+                            data.length == 0 ?
+                                <p className="text-muted text-center p-5">Nothing Yet!</p>
+                            :
+                                <p className="visually-hidden"></p>
+                        }
                     </div>
 
                     {/* Booking Cancellation Modal */}
