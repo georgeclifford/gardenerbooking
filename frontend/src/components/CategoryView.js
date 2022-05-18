@@ -278,7 +278,7 @@ const CategoryView = ({isLoggedin}) => {
                     <h1 className="text-center mb-5">Category Details</h1>
 
                     <div className="d-flex gap-5 col-8">
-                        <img className="img mt-3" src={`${serverBaseURI}/images/${inputs.cat_image}`}/>
+                        <img className="img1 mt-3" src={`${serverBaseURI}/images/${inputs.cat_image}`}/>
                         <div className="col-12 mt-3">
                             <h3 className="mb-4">{inputs.cat_name}</h3>
                             <h5 className="mb-3">{inputs.cat_desc}</h5>

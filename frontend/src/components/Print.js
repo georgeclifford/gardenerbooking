@@ -159,7 +159,7 @@ const Print = ({setAuth}) =>{
 
                                                     <td scope="row" className="col-2">
                                                         <p>Booking ID: {item.bmaster_id}</p>
-                                                        <p>{item.c_fname}{item.c_lname}</p>
+                                                        <p>{item.c_fname} {item.c_lname}</p>
                                                         <p>{item.c_phno}</p>
                                                     </td>
 

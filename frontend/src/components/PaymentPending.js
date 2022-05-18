@@ -77,7 +77,18 @@ const PaymentPending = () => {
 
     return (
         <Fragment>
-                    <div className="card border-secondary">
+                    <div className="d-flex justify-content-end">
+                        <Link class="btn btn-outline-dark" type="button" to={{
+                                pathname: "/print",
+                                search: `?type=paymentpending`,
+                            }} title="Download As PDF">
+                                
+                                <Pdf className="mt-n1" />
+
+                        </Link>
+                    </div>
+            
+                    <div className="card border-secondary my-2">
                         <div className="card-header">
                             <ul className="nav nav-pills card-header-pills">
 
@@ -95,16 +106,6 @@ const PaymentPending = () => {
                                 </li>
                                 <li className="nav-item">
                                     <a className="nav-link text-dark button" onClick={() => setTab("cancelled")} href="#">Cancelled Bookings</a>
-                                </li>
-                                <li className="nav-item">
-                                    <Link class="nav-link text-dark button mx-2" type="button" to={{
-                                            pathname: "/print",
-                                            search: `?type=paymentpending`,
-                                        }} title="Download As PDF">
-                                            
-                                            <Pdf className="mt-n1" />
-
-                                    </Link>
                                 </li>
                             </ul>
                         </div>

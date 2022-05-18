@@ -16,8 +16,8 @@ const Carousel = () => {
                         src="https://images.unsplash.com/photo-1438109382753-8368e7e1e7cf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                         className="fixed-height d-block w-100" alt="..." />
                     <div className="carousel-caption d-none d-md-block">
-                        <h5>First slide label</h5>
-                        <p>Some representative placeholder content for the first slide.</p>
+                        <h5>We Care!</h5>
+                        <p>We garden with atmost care.</p>
                     </div>
                     </div>
                     <div className="carousel-item">
@@ -25,8 +25,8 @@ const Carousel = () => {
                         src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
                         className="fixed-height d-block w-100" alt="..." />
                     <div className="carousel-caption d-none d-md-block">
-                        <h5>Second slide label</h5>
-                        <p>Some representative placeholder content for the second slide.</p>
+                        <h5>From Beginning To Forever!</h5>
+                        <p>Start your gardening and maintain it forever.</p>
                     </div>
                     </div>
                     <div className="carousel-item">
@@ -34,8 +34,8 @@ const Carousel = () => {
                         src="https://images.unsplash.com/photo-1582012107971-5aae799a70f2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
                         className="fixed-height d-block w-100" alt="..." />
                     <div className="carousel-caption d-none d-md-block">
-                        <h5>Third slide label</h5>
-                        <p>Some representative placeholder content for the third slide.</p>
+                        <h5>We Do It All</h5>
+                        <p>We cater all your gardening needs from A to Z.</p>
                     </div>
                     </div>
                 </div>
